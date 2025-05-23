@@ -13,6 +13,6 @@ router.get('/', getAllVehicles);
 router.get('/:id', getVehicleById);
 router.post('/', createVehicle);
 router.put('/:id', updateVehicle);
-router.get('/:id', deleteVehicle);
+router.delete('/:id', deleteVehicle);
 
 export default router;

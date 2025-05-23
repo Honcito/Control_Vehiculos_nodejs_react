@@ -130,4 +130,26 @@ export const updateVehicle = async (req, res) => {
 };
 
 // DELETE VEHICLE
-export const deleteVehicle = (req, res) => {};
+export const deleteVehicle = (req, res) => {
+  const db = getDB();
+  const id = req.params.id;
+
+  // Verificar si el vehículo existe
+  db.get(`SELECT * FROM vehiculos WHERE cod_vehiculo=?`, [id], (err, row) => {
+    if (err) return res.status(500).json({ error: err.message });
+
+    if (!row) return res.status(400).json({ error: "Vehículo no encontrado" });
+
+    // Si existe, se procede a eliminar
+    const sql = `DELETE FROM vehiculos WHERE cod_vehiculo=?`;
+    db.run(sql, [id], function (err) {
+      if (err) {
+        return res.status(500).json({ error: err.message });
+      }
+
+      res
+        .status(200)
+        .json({ message: "Datos del vehículo eliminados con éxito" });
+    });
+  });
+};
