@@ -1,0 +1,60 @@
+BACKEND
+Crear las carpetas backend y frontend
+cd backend
+Crear el server.js
+npm init -y
+npm install express sqlite3 cors
+npm install dotenv
+npm install nodemon
+npm install bcrypt
+
+Si dejamos el package.json con "type": "commonsjs" usaremos const express= require('express') si lo cambiamos a "types": "module" se tendrá que usar import express from 'express'
+Cambiamos en el package.json: "test": ... por "dev": "node server.js" para iniciar con npm run dev
+
+server.js
+    import express from 'express'
+
+    const app = express()
+
+    app.listen(5001, () => {
+        console.log("Listening on PORT: 5001")
+    })
+
+npm run dev
+
+Añadimos: 
+res.send("/api/notes", (req, res) => {
+    console.log("You have 5 notes")
+})
+
+despues const app y obtenemos en localhost:5001/api/notes el console.log
+
+Instalar nodemon para no tener que reiniciar la app con cada cambio
+npm install nodemon -D
+cambiar la linea "dev": "node server.js" del package.json a "nodemon server.js"
+
+Añadir al package.json 
+     "scripts": {
+    "dev": "nodemon server.js",
+    "start": "node server.js"
+  },
+
+  para el deployment "start": "node server.js"
+
+
+Creamos en backend la carpeta routes, dentro creamos notesRoutes.js e insertamos todas las rutas creadas en server.js
+app.get('/api/notes', (req, res) => {
+  res.status(200).send('You got 42 notes');
+});
+
+app.post('/api/notes', (req, res) => {
+  res.status(201).json({ message: 'Note created successfully!' });
+});
+
+app.put('/api/notes/:id', (req, res) => {
+  res.status(200).json({ message: 'Note updated successfully!' });
+});
+
+app.delete('/api/notes/:id', (req, res) => {
+  res.status(200).json({ message: 'Note deleted successfully!' });
+});
