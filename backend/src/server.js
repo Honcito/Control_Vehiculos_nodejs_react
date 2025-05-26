@@ -7,6 +7,7 @@ import authRoutes from "./routes/authRoutes.js"; // ⬅️ Faltaba importar esto
 import userRoutes from "./routes/userRoutes.js";
 import propietarioRoutes from "./routes/propietarioRoutes.js";
 import vehiculoRoutes from "./routes/vehiculoRoutes.js";
+import controlVehiculosRoutes from "./routes/controlVehiculosRoutes.js";
 import { authMiddleware } from "./middleware/authMiddleware.js"; // ⬅️ Estaba mal escrito "atuhMiddleware"
 
 dotenv.config();
@@ -15,6 +16,8 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 console.log("Iniciando la app...");
+
+app.use(express.json());
 
 app.use(
   session({
@@ -29,7 +32,7 @@ app.use(
   })
 );
 
-app.use(express.json());
+
 
 // 🟢 Rutas de autenticación
 app.use("/api/auth", authRoutes);
@@ -38,6 +41,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/usuarios", authMiddleware, userRoutes);
 app.use("/api/propietarios", authMiddleware, propietarioRoutes);
 app.use("/api/vehiculos", authMiddleware, vehiculoRoutes);
+app.use("/api/control_vehiculos", authMiddleware, controlVehiculosRoutes);
 
 // 🔌 Iniciar servidor y conectar BD
 (async () => {

@@ -13,7 +13,7 @@ router.post("/logout", authMiddleware, logout);
 router.get(
   "/admin/data",
   authMiddleware,
-  roleMiddleware(["admin"]),
+  roleMiddleware(["ROLE_ADMIN"]),
   (req, res) => {
     res.json({ mensaje: "Solo accesible por administradores" });
   }

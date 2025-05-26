@@ -35,18 +35,18 @@ export const getOwnerById = (req, res) => {
 // CREATE OWNER
 export const createOwner = (req, res) => {
   const db = getDB();
-  const { nombre, empresa, telefono, num_plazas, plazas_asignadas } = req.body;
+  const { nombre, empresa, telefono, num_plazas } = req.body;
 
   if (!nombre) {
     return res.status(400).json({ error: "El campo nombre es obligatorio" });
   }
 
   try {
-    const sql = `INSERT INTO propietarios (nombre, empresa, telefono, num_plazas, plazas_asignadas) VALUES (?,?,?,?,?)`;
+    const sql = `INSERT INTO propietarios (nombre, empresa, telefono, num_plazas) VALUES (?,?,?,?)`;
 
     db.run(
       sql,
-      [nombre, empresa, telefono, num_plazas, plazas_asignadas],
+      [nombre, empresa, telefono, num_plazas],
       function (err) {
         if (err) {
           return res.status(500).json({ error: err.message });
@@ -67,7 +67,7 @@ export const createOwner = (req, res) => {
 export const updateOwner = async (req, res) => {
   const db = getDB();
   const id = req.params.id;
-  const { nombre, empresa, telefono, num_plazas, plazas_asignadas } = req.body;
+  const { nombre, empresa, telefono, num_plazas } = req.body;
 
   db.get(
     `SELECT * FROM propietarios WHERE id_propietario=?`,
@@ -79,10 +79,10 @@ export const updateOwner = async (req, res) => {
         return res.status(404).json({ error: "Propietario no encontrado" });
 
       try {
-        const sql = `UPDATE propietarios SET nombre=?, empresa=?, telefono=?, num_plazas=?, plazas_asignadas=?`;
+        const sql = `UPDATE propietarios SET nombre=?, empresa=?, telefono=?, num_plazas=? WHERE id_propietario=?`;
         db.run(
           sql,
-          [nombre, empresa, telefono, num_plazas, plazas_asignadas],
+          [nombre, empresa, telefono, num_plazas, id],
           function (err) {
             if (err) {
               return res.status(500).json({ error: err.message });
