@@ -1,5 +1,6 @@
 import express from "express";
 import session from "express-session";
+import SQLiteStore from "connect-sqlite3";
 import dotenv from "dotenv";
 import { connectDB } from "./config/db.js";
 
@@ -10,10 +11,20 @@ import vehiculoRoutes from "./routes/vehiculoRoutes.js";
 import controlVehiculosRoutes from "./routes/controlVehiculosRoutes.js";
 import { authMiddleware } from "./middleware/authMiddleware.js"; // ⬅️ Estaba mal escrito "atuhMiddleware"
 
+
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const SQLiteStoreSession = SQLiteStore(session);
+
+import fs from "fs";
+import path from "path";
+
+const sessionsDir = path.join(process.cwd(), "sessions");
+if (!fs.existsSync(sessionsDir)) {
+  fs.mkdirSync(sessionsDir);
+}
 
 console.log("Iniciando la app...");
 
@@ -21,6 +32,7 @@ app.use(express.json());
 
 app.use(
   session({
+    store: new SQLiteStoreSession({ db: "sessions.sqlite", dir: "./sessions" }),
     secret: process.env.SECRET_KEY,
     resave: false,
     saveUninitialized: false, // ⬅️ Corregido (estaba mal escrito)

@@ -14,7 +14,7 @@ export const login = (req, res) => {
         const match = await bcrypt.compare(password, user.password);
         if(!match) return res.status(401).json({ error: "Contraseña incorrecta" });
 
-        req.session.user = { id: user.id, nombre: user.nombre, rol: user.rol};
+        req.session.user = { id_usuario: user.id_usuario, nombre: user.nombre, rol: user.rol};
         res.status(200).json({ message: "Login correcto", user: req.session.user });
     });
 
