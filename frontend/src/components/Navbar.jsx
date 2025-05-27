@@ -2,6 +2,8 @@ import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import "../navbar.css";
 import logo from "/images/GrasalvaLogo.JPEG";
+import { Moon } from 'lucide-react';
+import { Sun } from 'lucide-react';
 
 const Navbar = () => {
   const [menuActive, setMenuActive] = useState(false);
@@ -71,6 +73,12 @@ const Navbar = () => {
             >
               Cerrar Sesión
             </NavLink>
+          </li>
+          <li>
+            <Sun />
+          </li>
+          <li>
+            <Moon />
           </li>
         </ul>
       </div>
