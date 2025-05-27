@@ -1,0 +1,41 @@
+cd <raiz-proyecto>
+npm create vite@latest frontend -- --template react
+npm install
+npm run dev
+ctrl-c
+npm i react-router
+npm i react-hot-toast
+
+Instalar Tailwind en React-Vite
+npm install tailwindcss @tailwindcss/vite
+Configure the Vite plugin
+
+Add the @tailwindcss/vite plugin to your Vite configuration.
+vite.config.ts
+
+import { defineConfig } from 'vite'
+import tailwindcss from '@tailwindcss/vite'
+export default defineConfig({
+  plugins: [
+    tailwindcss(),
+  ],
+})
+
+copiar al principio de index.css
+@import "tailwindcss";
+
+iconos
+npm i lucide-react
+
+Axios
+npm i axios
+
+daisyui.com
+npm i -D daisyui@latest
+en el App.css/podemos elegir el tema de la página que nos guste
+@plugin "daisyui" {
+    themes:  forest; }
+
+Añadir al .env del backend
+    NODE_ENV=production #Or deployment
+

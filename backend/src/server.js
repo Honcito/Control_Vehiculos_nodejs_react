@@ -1,4 +1,5 @@
 import express from "express";
+import cors from 'cors';
 import session from "express-session";
 import SQLiteStore from "connect-sqlite3";
 import dotenv from "dotenv";
@@ -15,6 +16,12 @@ import { authMiddleware } from "./middleware/authMiddleware.js"; // ⬅️ Estab
 dotenv.config();
 
 const app = express();
+
+app.use(cors({
+  origin: "http://localhost:5173",
+  credentials: true
+}));
+
 const PORT = process.env.PORT || 3000;
 const SQLiteStoreSession = SQLiteStore(session);
 
