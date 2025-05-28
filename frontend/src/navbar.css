@@ -9,8 +9,7 @@
 body {
     font-family: "Jost", serif;
     min-height: 100vh;
-    overflow-x:;
-    /* background: url(./background.jpg) no-repeat center center/cover; */
+    overflow-x: auto;
 }
 
 .navbar {
@@ -40,7 +39,6 @@ body {
 .navbar-logo {
     font-size: 2rem;
     font-weight: 600;
-    color: #fff;
     text-decoration: none;
     cursor: pointer;
     margin: 3px;
@@ -63,7 +61,6 @@ body {
 
 .navbar-container .navbar-menu li a {
     text-decoration: none;
-    color: #fff;
     font-size: 1.3rem;
     font-weight: 500;
     padding: 3px 20px;
@@ -93,10 +90,8 @@ body {
     width: 25px;
     height: 3px;
     margin: 5px auto;
-    background-color: #fff;
     transition: all 0.3s ease-in-out;
 }
-
 
 /* Responsive Styles */
 @media (max-width: 880px) {

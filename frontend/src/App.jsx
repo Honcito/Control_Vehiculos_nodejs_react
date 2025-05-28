@@ -11,7 +11,7 @@ import MainLayout from "./layouts/MainLayout";
 function App() {
   return (
     <>
-      <div data-theme="forest">
+      <div >
         {/* <div className="absolute inset-0 -z-10 h-full w-full bg-white [background:radial-gradient(125%_125%_at_50%_10%,#fff_40%,#63e_100%)]"></div> */}
         
           <Routes>
@@ -20,7 +20,8 @@ function App() {
               <HomePage />
               </MainLayout>
               } />
-            <Route path="/usuarios" element={<MainLayout>
+            <Route path="/usuarios" element={
+              <MainLayout>
               <Usuarios />
               </MainLayout>} />
             <Route path="/propietarios" element={
