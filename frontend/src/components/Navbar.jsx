@@ -17,7 +17,7 @@ const Navbar = () => {
         </a>
 
         <button
-          className={`navbar-toggle ${menuActive ? "active" : ""}`}
+          className={`navbar-toggle ${menuActive ? "active" : ""} text-base-content`}
           onClick={toggleMenu}
         >
           <span className="bar"></span>
