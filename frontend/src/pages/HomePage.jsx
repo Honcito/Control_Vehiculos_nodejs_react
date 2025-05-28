@@ -1,10 +1,27 @@
+import { useEffect, useState } from "react";
+import api from "../lib/axios"; // tu archivo con axios configurado
+import { Home } from "lucide-react";
+
 const HomePage = () => {
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    api.get("/auth/me")
+      .then(res => setUser(res.data))
+      .catch(() => setUser(null));
+  }, []);
+
+  if (!user) return <p>Cargando o no autenticado...</p>;
+
   return (
-    <>
-      <div className="mx-auto px-4 dark:bg-gray-900 dark:text-white">
-        <h1 className="text-3xl font-bold text-center mt-10">Inicio</h1>
-      </div>
-    </>
+    <div>
+      <h1>Bienvenido, {user.username}</h1>
+      {user.role === "ROLE_ADMIN" ? (
+        <p>Eres administrador, puedes gestionar todo.</p>
+      ) : (
+        <p>Eres usuario normal, solo puedes registrar vehículos.</p>
+      )}
+    </div>
   );
 };
 

@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_URL = import.meta.env.MODE === "development" ? "http://localhost:3000/" : "/api" //producción;
+const BASE_URL = import.meta.env.MODE === "development" ? "http://localhost:3000/" : "/api" //producción || deployment;
 
 
 const api = axios.create({

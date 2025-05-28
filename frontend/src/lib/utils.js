@@ -6,3 +6,4 @@ export function formatDate(date) {
     year: "numeric",
   });
 }
+ 

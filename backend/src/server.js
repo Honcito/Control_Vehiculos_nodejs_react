@@ -10,8 +10,7 @@ import userRoutes from "./routes/userRoutes.js";
 import propietarioRoutes from "./routes/propietarioRoutes.js";
 import vehiculoRoutes from "./routes/vehiculoRoutes.js";
 import controlVehiculosRoutes from "./routes/controlVehiculosRoutes.js";
-import { authMiddleware } from "./middleware/authMiddleware.js"; // ⬅️ Estaba mal escrito "atuhMiddleware"
-
+import { authMiddleware } from "./middleware/authMiddleware.js";
 
 dotenv.config();
 

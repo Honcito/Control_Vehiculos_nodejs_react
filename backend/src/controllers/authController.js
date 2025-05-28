@@ -26,3 +26,12 @@ export const logout = (req, res) => {
   res.clearCookie("connect.sid");
   res.json({ message: "Sesión cerrada" });
 };
+
+// export const getCurrentUser = (req, res) => {
+//   if(!req.user) {
+//     return res.status(401).json({ message: "No autenticado" });
+//   }
+
+//   const { id, nombre, rol } = req.user;
+//   res.json({ id, nombre, role });
+// }
