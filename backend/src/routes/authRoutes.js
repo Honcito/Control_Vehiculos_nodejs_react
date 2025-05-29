@@ -25,8 +25,8 @@ router.get("/me", authMiddleware, (req, res) => {
     return res.status(401).json({ message: "No autenticado" });
   }
 
-  const { id_usuario, nombre, rol } = req.session.user;
-  res.json({ id: id_usuario, username: nombre, role: rol }); // o usa los nombres que prefieras
+  const { id_usuario, nombre, role } = req.session.user;
+  res.json({ id: id_usuario, username: nombre, role }); // o usa los nombres que prefieras
 });
 
 

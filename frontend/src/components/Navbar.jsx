@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 import logo from "/images/GrasalvaLogo.JPEG";
 import "../navbar.css";
 import ThemeToggle from "./ThemeToggle";
-import { AuthContext } from "../context/AuthContext"; // ajusta la ruta si es necesario
+import { AuthContext } from "../context/AuthContext";
 
 const Navbar = () => {
   const [menuActive, setMenuActive] = useState(false);

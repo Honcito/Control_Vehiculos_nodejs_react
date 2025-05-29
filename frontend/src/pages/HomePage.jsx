@@ -7,9 +7,13 @@ const HomePage = () => {
 
   useEffect(() => {
     api.get("/api/auth/me")
-      .then(res => setUser(res.data))
+      .then(res => {
+        //console.log("Usuario desde backend:", res.data); // 👈
+        setUser(res.data);
+      })
       .catch(() => setUser(null));
   }, []);
+  
 
   if (!user) return <p>Cargando o no autenticado...</p>;
 

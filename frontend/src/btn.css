@@ -37,7 +37,7 @@
     width: calc(100% + 4px);
     height: calc(100% + 4px);
     filter: blur(8px);
-    animation: glowing 20s;
+    animation: glowing 35s;
 
     /* ANIMATION */
     transition: opacity .3s ease-in-out;
