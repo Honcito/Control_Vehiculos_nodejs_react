@@ -15,7 +15,7 @@ const Login = () => {
     const result = await login({ nombre, password });
 
     if (result.success) {
-      navigate("/");
+      navigate("/home");
     } else {
       setError(result.message);
     }
@@ -38,11 +38,10 @@ const Login = () => {
           <br/>
           <div className="mb-8 flex items-center justify-center">
             <input
-              className="w-60 h-14 px-4 text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 border border-gray-200 rounded text-gray-600 text-center"
+              className="w-60 h-10 px-4 text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 border border-gray-200 rounded text-gray-600 text-left"
               type="text"
               value={nombre}
               onChange={(e) => setNombre(e.target.value)}
-              placeholder="Usuario"
               required
             />
           </div>
@@ -53,11 +52,10 @@ const Login = () => {
           <br/>
           <div className="mb-6 flex items-center justify-center">
             <input
-              className="w-60 h-14 px-4 text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 border border-gray-200 rounded text-gray-600 text-center"
+              className="w-60 h-10 px-4 text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 border border-gray-200 rounded text-gray-600 text-left"
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="Contraseña"
               required
             />
           </div>

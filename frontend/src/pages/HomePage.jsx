@@ -6,7 +6,7 @@ const HomePage = () => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    api.get("/auth/me")
+    api.get("/api/auth/me")
       .then(res => setUser(res.data))
       .catch(() => setUser(null));
   }, []);
@@ -15,11 +15,11 @@ const HomePage = () => {
 
   return (
     <div>
-      <h1>Bienvenido, {user.username}</h1>
+      <h1>Bienvenido/a, {user.username.charAt(0).toUpperCase() + user.username.toLowerCase().slice(1)}</h1>
       {user.role === "ROLE_ADMIN" ? (
-        <p>Eres administrador, puedes gestionar todo.</p>
+        <p>Eres administrador/a, puedes gestionar todo.</p>
       ) : (
-        <p>Eres usuario normal, solo puedes registrar vehículos.</p>
+        <p>Eres usuario/a normal, solo puedes registrar vehículos.</p>
       )}
     </div>
   );
