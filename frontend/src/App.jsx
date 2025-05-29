@@ -58,7 +58,7 @@ function App() {
               </MainLayout>
             }
           />
-          <Route path="/logout" element={<Logout />} />
+          <Route path="/logout" element={<Login />} />
         </Routes>
       </div>
     </>

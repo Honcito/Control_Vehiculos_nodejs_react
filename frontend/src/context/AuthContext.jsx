@@ -16,7 +16,7 @@ export const AuthProvider = ({ children }) => {
   // Login
   const login = async (credentials) => {
     try {
-      console.log("Enviando login con:", credentials);
+      //console.log("Enviando login con:", credentials);
 
       const res = await axios.post("http://localhost:3000/api/auth/login", credentials, {
         withCredentials: true,

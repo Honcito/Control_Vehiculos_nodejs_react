@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import '../btn.css'
 
 const Login = () => {
   const { login } = useAuth();
@@ -70,7 +71,8 @@ const Login = () => {
           <div className="mb-6 flex items-center justify-center">
             <button
               type="submit"
-              className="w-60 h-14 bg-blue-600 hover:bg-blue-700 rounded text-sm font-bold text-white transition duration-200"
+              className="btn-login"
+              // w-60 h-14 bg-blue-600 hover:bg-blue-700 rounded text-sm font-bold text-white transition duration-200
             >
               Iniciar sesión
             </button>

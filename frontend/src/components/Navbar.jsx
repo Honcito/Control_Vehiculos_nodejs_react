@@ -14,7 +14,7 @@ const Navbar = () => {
   return (
     <nav className="navbar">
       <div className="navbar-container">
-        <a href="/" className="navbar-logo">
+        <a href="/home" className="navbar-logo">
           <img src={logo} alt="Logo Grasalva" />
         </a>
 
@@ -28,9 +28,10 @@ const Navbar = () => {
         </button>
 
         <ul className={`navbar-menu ${menuActive ? "active" : ""}`}>
-          <li><NavLink to="/">Inicio</NavLink></li>
+          <li><NavLink to="/home">Inicio</NavLink></li>
 
           {user?.role === "ROLE_ADMIN" && (
+            
             <>
               <li><NavLink to="/propietarios">Propietarios</NavLink></li>
               <li><NavLink to="/vehiculos">Vehículos</NavLink></li>
