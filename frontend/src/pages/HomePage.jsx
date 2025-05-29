@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import api from "../lib/axios"; // tu archivo con axios configurado
+import api from "../lib/axios";
 import { Home } from "lucide-react";
 
 const HomePage = () => {
@@ -8,24 +8,88 @@ const HomePage = () => {
   useEffect(() => {
     api.get("/api/auth/me")
       .then(res => {
-        //console.log("Usuario desde backend:", res.data); // 👈
         setUser(res.data);
       })
       .catch(() => setUser(null));
   }, []);
-  
 
   if (!user) return <p>Cargando o no autenticado...</p>;
 
   return (
-    <div>
-      <h1>Bienvenido/a, {user.username.charAt(0).toUpperCase() + user.username.toLowerCase().slice(1)}</h1>
+    <div className="text-center px-4 py-5">
+      <h1 className="font-bold text-2xl text-green-400">
+        Hola {user.username.charAt(0).toUpperCase() + user.username.toLowerCase().slice(1)}
+      </h1>
+
+      <br />
+      <br />
+
       {user.role === "ROLE_ADMIN" ? (
-        <p>Eres administrador/a, puedes gestionar todo.</p>
+        <div className="flex flex-col md:flex-row justify-center gap-10 mb-6">
+          {/* Instrucciones para Usuarios */}
+          <div className="w-full md:w-1/3">
+            <div className="min-h-[450px] rounded-xl">
+              <div className="rounded-t-xl px-4 py-3">
+                <h4 className="text-lg font-bold text-center">Instrucciones para Usuarios</h4>
+                <br/>
+              </div>
+              <div className="p-4 text-lg">
+                <ul className="list-inside space-y-2">
+                  <li className="text-left"><strong>Ingreso de Matrícula:</strong> Introduzca la matrícula del vehículo. El nombre de la empresa se completa automáticamente.</li>
+                  <li className="text-left"><strong>Fecha/Hora de Salida:</strong> Clic en el campo para rellenar con la fecha y hora actual.</li>
+                  <li className="text-left"><strong>Guardar Datos:</strong> Clic en Guardar para registrar la salida.</li>
+                  <li className="text-left"><strong>Fecha/Hora de Entrada:</strong> Clic para registrar el regreso del vehículo.</li>
+                  <li className="text-left"><strong>Observaciones:</strong> Agregue comentarios si lo desea.</li>
+                  <li className="text-left"><strong>Cerrar Sesión:</strong> Clic en Cerrar sesión al finalizar su turno.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          {/* Instrucciones para Administradores */}
+          <div className="w-full md:w-1/3">
+            <div className="min-h-[450px] rounded-xl">
+              <div className="rounded-t-xl px-4 py-3">
+                <h4 className="text-lg font-bold text-center">Instrucciones para Administradores</h4>
+                <br/>
+              </div>
+              <div className="p-4 text-lg">
+                <ul className="list-inside space-y-2">
+                  <li className="text-left"><strong>Acceso Completo:</strong> Acceso total al sistema.</li>
+                  <li className="text-left"><strong>Consulta de Registros:</strong> Visualización de entradas y salidas.</li>
+                  <li className="text-left"><strong>Gestión de Usuarios:</strong> Añadir, editar o eliminar usuarios.</li>
+                  <li className="text-left"><strong>Generación de Reportes:</strong> Crear informes detallados.</li>
+                  <li className="text-left"><strong>Seguridad y Control:</strong> Configuración de roles y permisos.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
       ) : (
-        <p>Eres usuario/a normal, solo puedes registrar vehículos.</p>
+        <div className="flex flex-col md:flex-row justify-center gap-10 mb-6">
+          {/* Instrucciones para Usuarios */}
+          <div className="w-full md:w-1/3">
+            <div className="min-h-[450px] rounded-xl">
+              <div className="rounded-t-xl px-4 py-3">
+                <h4 className="text-lg font-bold text-center">Instrucciones para Usuarios</h4>
+                <br/>
+              </div>
+              <div className="p-4 text-lg">
+                <ul className="list-inside space-y-2">
+                  <li className="text-left"><strong>Ingreso de Matrícula:</strong> Introduzca la matrícula del vehículo. El nombre de la empresa se completa automáticamente.</li>
+                  <li className="text-left"><strong>Fecha/Hora de Salida:</strong> Clic en el campo para rellenar con la fecha y hora actual.</li>
+                  <li className="text-left"><strong>Guardar Datos:</strong> Clic en Guardar para registrar la salida.</li>
+                  <li className="text-left"><strong>Fecha/Hora de Entrada:</strong> Clic para registrar el regreso del vehículo.</li>
+                  <li className="text-left"><strong>Observaciones:</strong> Agregue comentarios si lo desea.</li>
+                  <li className="text-left"><strong>Cerrar Sesión:</strong> Clic en Cerrar sesión al finalizar su turno.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          </div>
       )}
     </div>
+    
   );
 };
 
