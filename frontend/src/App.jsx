@@ -9,12 +9,12 @@ import Usuarios from "./pages/Usuarios";
 import MainLayout from "./layouts/MainLayout";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import FormularioPropietario from "./pages/FormularioPropietario";
 
 function App() {
   return (
     <>
       <div>
-        {/* <div className="absolute inset-0 -z-10 h-full w-full bg-white [background:radial-gradient(125%_125%_at_50%_10%,#fff_40%,#63e_100%)]"></div> */}
 
         <Routes>
           <Route path="/" element={<Navigate to="/login" replace />} />
@@ -41,6 +41,22 @@ function App() {
             element={
               <MainLayout>
                 <Propietarios />
+              </MainLayout>
+            }
+          />
+          <Route
+            path="/propietarios/nuevo"
+            element={
+              <MainLayout>
+                <FormularioPropietario />
+              </MainLayout>
+            }
+          />
+          <Route
+            path="/propietarios/editar/:id"
+            element={
+              <MainLayout>
+                <FormularioPropietario />
               </MainLayout>
             }
           />

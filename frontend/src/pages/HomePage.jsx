@@ -20,7 +20,7 @@ const HomePage = () => {
     <div className="text-center px-4 py-5">
       <br/>
       <br/>
-      <h1 className="font-bold text-4xl text-green-400">
+      <h1 className="font-bold text-4xl text-green-700">
         Hola{" "}
         {user.username.charAt(0).toUpperCase() +
           user.username.toLowerCase().slice(1)}
