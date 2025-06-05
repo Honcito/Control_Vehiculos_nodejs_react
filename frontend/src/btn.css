@@ -1,9 +1,176 @@
-/* BUTTON */
+/* LOGIN BUTTON */
 .btn-login {
+  padding: 15px 40px;
+  border: none;
+  outline: none;
+  color: #fff;
+  cursor: pointer;
+  position: relative;
+  z-index: 0;
+  border-radius: 12px;
+  margin: 30px;
+}
+
+.btn-login::after {
+  content: "";
+  z-index: -1;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: #1b8369;
+  left: 0;
+  top: 0;
+  border-radius: 10px;
+}
+
+/* GLOW */
+.btn-login::before {
+  content: "";
+  background: linear-gradient(
+    45deg,
+    #ff0000,
+    #ff7300,
+    #fffb00,
+    #48ff00,
+    #00ffd5,
+    #002bff,
+    #ff00c8,
+    #ff0000
+  );
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  background-size: 600%;
+  z-index: -1;
+  width: calc(100% + 4px);
+  height: calc(100% + 4px);
+  filter: blur(8px);
+  animation: glowing 35s;
+
+  /* ANIMATION */
+  transition: opacity 0.3s ease-in-out;
+  border-radius: 10px;
+  opacity: 0;
+}
+
+@keyframes glowing {
+  0% {
+    background-position: 0 0;
+  }
+
+  50% {
+    background-position: 400% 0;
+  }
+
+  100% {
+    background-position: 0 0;
+  }
+}
+
+/* HOVER */
+.btn-login:hover::before {
+  opacity: 1;
+}
+
+.btn-login:active:after {
+  background: transparent;
+}
+
+.btn-login:active {
+  color: #000;
+  font-weight: bold;
+}
+
+/* ADD BUTTON */
+.btn-add {
+  padding: 8px 10px;
+  border: none;
+  outline: none;
+  color: #fff;
+  cursor: pointer;
+  position: relative;
+  z-index: 0;
+  border-radius: 12px;
+  margin-right: 210px;
+  margin-top: 10px;
+  margin-bottom: 15px;
+  margin-left: 878px;
+}
+
+.btn-add::after {
+  content: "";
+  z-index: -1;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: #0a609d;
+  left: 0;
+  top: 0;
+  border-radius: 10px;
+}
+
+/* GLOW */
+.btn-add::before {
+  content: "";
+  background: linear-gradient(45deg,
+        #fc0202,
+        #f89a1e,
+        #f1f831,
+        #3fee41,
+        #45f8e0,
+        #0b6ba3,
+        #e62dfa,
+        #ff0000);
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  background-size: 600%;
+  z-index: -1;
+  width: calc(100% + 4px);
+  height: calc(100% + 4px);
+  filter: blur(8px);
+  animation: glowing 35s;
+
+  /* ANIMATION */
+  transition: opacity 0.3s ease-in-out;
+  border-radius: 10px;
+  opacity: 0;
+}
+
+@keyframes glowing {
+  0% {
+    background-position: 0 0;
+  }
+
+  50% {
+    background-position: 400% 0;
+  }
+
+  100% {
+    background-position: 0 0;
+  }
+}
+
+/* HOVER */
+.btn-add:hover::before {
+  opacity: 1;
+}
+
+.btn-add:active:after {
+  background: transparent;
+}
+
+.btn-add:active {
+  color: #000;
+  font-weight: bold;
+}
+
+/* EDIT BUTTON */
+.btn-update {
     padding: 15px 40px;
     border: none;
     outline: none;
-    color: #FFF;
+    color: #fff;
     cursor: pointer;
     position: relative;
     z-index: 0;
@@ -11,24 +178,30 @@
     margin: 30px;
 }
 
-.btn-login::after {
+.btn-update::after {
     content: "";
     z-index: -1;
     position: absolute;
     width: 100%;
     height: 100%;
-    background-color: #333;
+    background-color: #1b8369;
     left: 0;
     top: 0;
     border-radius: 10px;
 }
 
 /* GLOW */
-.btn-login::before {
+.btn-update::before {
     content: "";
     background: linear-gradient(45deg,
-            #FF0000, #FF7300, #FFFB00, #48FF00,
-            #00FFD5, #002BFF, #FF00C8, #FF0000);
+          #fc0202,
+          #f89a1e,
+          #f1f831,
+          #3fee41,
+          #45f8e0,
+          #0b6ba3,
+          #e62dfa,
+          #ff0000);
     position: absolute;
     top: -2px;
     left: -2px;
@@ -40,7 +213,7 @@
     animation: glowing 35s;
 
     /* ANIMATION */
-    transition: opacity .3s ease-in-out;
+    transition: opacity 0.3s ease-in-out;
     border-radius: 10px;
     opacity: 0;
 }
@@ -60,17 +233,96 @@
 }
 
 /* HOVER */
-.btn-login:hover::before {
+.btn-update:hover::before {
     opacity: 1;
 }
 
-.btn-login:active:after {
+.btn-update:active:after {
     background: transparent;
 }
 
-.btn-login:active {
+.btn-update:active {
     color: #000;
-    font-weight: bold;
-
-
+    font-weight: bold; 
 }
+
+/* DELETE BUTTON */
+.btn-delete {
+    padding: 15px 40px;
+    border: none;
+    outline: none;
+    color: #fff;
+    cursor: pointer;
+    position: relative;
+    z-index: 0;
+    border-radius: 12px;
+    margin: 30px;
+}
+
+.btn-delete::after {
+    content: "";
+    z-index: -1;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: #ef3e3e;
+    left: 0;
+    top: 0;
+    border-radius: 10px;
+}
+
+/* GLOW */
+.btn-delete::before {
+    content: "";
+    background: linear-gradient(45deg,
+          #fc0202,
+          #f89a1e,
+          #f1f831,
+          #3fee41,
+          #45f8e0,
+          #0b6ba3,
+          #e62dfa,
+          #ff0000);
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    background-size: 600%;
+    z-index: -1;
+    width: calc(100% + 4px);
+    height: calc(100% + 4px);
+    filter: blur(8px);
+    animation: glowing 35s;
+
+    /* ANIMATION */
+    transition: opacity 0.3s ease-in-out;
+    border-radius: 10px;
+    opacity: 0;
+}
+
+@keyframes glowing {
+    0% {
+        background-position: 0 0;
+    }
+
+    50% {
+        background-position: 400% 0;
+    }
+
+    100% {
+        background-position: 0 0;
+    }
+}
+
+/* HOVER */
+.btn-delete:hover::before {
+    opacity: 1;
+}
+
+.btn-delete:active:after {
+    background: transparent;
+}
+
+.btn-delete:active {
+    color: #000;
+    font-weight: bold; }
+

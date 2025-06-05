@@ -8,6 +8,7 @@ import Logout from "./pages/Logout";
 import Usuarios from "./pages/Usuarios";
 import MainLayout from "./layouts/MainLayout";
 import Login from "./pages/Login";
+import Register from "./pages/Register";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Navigate to="/login" replace />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
           <Route
             path="/home"
             element={
@@ -55,6 +57,14 @@ function App() {
             element={
               <MainLayout>
                 <ControlVehiculos />
+              </MainLayout>
+            }
+          />
+          <Route
+            path="/register"
+            element={
+              <MainLayout>
+                <Register />
               </MainLayout>
             }
           />

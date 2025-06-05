@@ -17,9 +17,15 @@ const Navbar = () => {
         <a href="/home" className="navbar-logo">
           <img src={logo} alt="Logo Grasalva" />
         </a>
-
+        <ul className={`navbar-menu ${menuActive ? "active" : ""}`}>
+          <li className="navbar-menu">
+            <NavLink to="/home">Inicio</NavLink>
+          </li>
+        </ul>
         <button
-          className={`navbar-toggle ${menuActive ? "active" : ""} text-base-content`}
+          className={`navbar-toggle ${
+            menuActive ? "active" : ""
+          } text-base-content`}
           onClick={toggleMenu}
         >
           <span className="bar"></span>
@@ -30,17 +36,28 @@ const Navbar = () => {
         <ul className={`navbar-menu ${menuActive ? "active" : ""}`}>
           {user?.role === "ROLE_ADMIN" && (
             <>
-              <li><NavLink to="/propietarios">Propietarios</NavLink></li>
-              <li><NavLink to="/vehiculos">Vehículos</NavLink></li>
-              <li><NavLink to="/usuarios">Usuarios</NavLink></li>
+              <li>
+                <NavLink to="/propietarios">Propietarios</NavLink>
+              </li>
+              <li>
+                <NavLink to="/vehiculos">Vehículos</NavLink>
+              </li>
+              <li>
+                <NavLink to="/usuarios">Usuarios</NavLink>
+              </li>
             </>
           )}
 
           {/* Visible para ambos roles */}
-          <li><NavLink to="/home">Inicio</NavLink></li>
-          <li><NavLink to="/control_vehiculos">Control de Vehículos</NavLink></li>
-          <li><NavLink to="/logout">Cerrar Sesión</NavLink></li>
-          <li><ThemeToggle /></li>
+          <li>
+            <NavLink to="/control_vehiculos">Control de Vehículos</NavLink>
+          </li>
+          <li>
+            <NavLink to="/logout">Cerrar Sesión</NavLink>
+          </li>
+          <li>
+            <ThemeToggle />
+          </li>
         </ul>
       </div>
     </nav>

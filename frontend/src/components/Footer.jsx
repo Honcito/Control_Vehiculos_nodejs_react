@@ -3,7 +3,7 @@
 const Footer = () => {
 
   return (
-    <footer className="text-base-content py-6 mt-auto text-center text-lg opacity-80">
+    <footer className="text-base-content py-6 mt-auto text-center text-lg opacity-80 sticky">
       &copy; 2025 Hong
     </footer>
   );

@@ -84,10 +84,14 @@ const Login = () => {
             <a className="text-sm text-blue-500 hover:underline" href="/register">
               ¿No tienes cuenta? Regístrate aquí
             </a>
+            
           </div>
+          
         </form>
+        
       </section>
     </div>
+   
   );
 };
 

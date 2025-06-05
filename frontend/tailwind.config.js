@@ -8,4 +8,7 @@ module.exports = {
     },
   },
   plugins: [require("daisyui")],
+  disyui: {
+    themes: ["abyss", "nord"],
+  },
 };

@@ -2,12 +2,14 @@ import express from "express";
 import { login, logout } from "../controllers/authController.js";
 import { authMiddleware } from "../middleware/authMiddleware.js";
 import { roleMiddleware } from "../middleware/roleMiddleware.js";
+import { registerUser } from "../controllers/registerUser.js";
 
 
 
 const router = express.Router();
 
 router.post("/login", login);
+router.post("/register", registerUser);
 router.post("/logout", authMiddleware, logout);
 
 // Ruta protegida de ejemplo

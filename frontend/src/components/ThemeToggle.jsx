@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Sun, Moon } from "lucide-react";
 
 const ThemeToggle = () => {
-  const [theme, setTheme] = useState("forest");
+  const [theme, setTheme] = useState("");
 
   useEffect(() => {
     const storedTheme = localStorage.getItem("theme");
@@ -13,7 +13,7 @@ const ThemeToggle = () => {
   }, []);
 
   const toggleTheme = () => {
-    const newTheme = theme === "forest" ? "light" : "forest";
+    const newTheme = theme === "abyss" ? "nord" : "abyss";
     setTheme(newTheme);
     localStorage.setItem("theme", newTheme);
     document.documentElement.setAttribute("data-theme", newTheme);
@@ -21,7 +21,7 @@ const ThemeToggle = () => {
 
   return (
     <button onClick={toggleTheme} className="btn btn-ghost">
-      {theme === "forest" ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+      {theme === "abyss" ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
     </button>
   );
 };

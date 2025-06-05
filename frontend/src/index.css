@@ -1,9 +1,13 @@
 @import "tailwindcss";
 
 @plugin "daisyui" {
-    themes: forest --default, light;
+    themes: abyss --default, nord;
 }
 
+:root {
+    --spacing: 0.25rem;
+    /* 4px */
+}
 
 
 body {
