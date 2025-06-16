@@ -10,6 +10,7 @@ import MainLayout from "./layouts/MainLayout";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import FormularioPropietario from "./pages/FormularioPropietario";
+import FormularioVehiculos from './pages/FormularioVehiculos';
 
 function App() {
   return (
@@ -65,6 +66,22 @@ function App() {
             element={
               <MainLayout>
                 <Vehiculos />
+              </MainLayout>
+            }
+          />
+          <Route
+            path="/vehiculos/nuevo"
+            element={
+              <MainLayout>
+                <FormularioVehiculos />
+              </MainLayout>
+            }
+          />
+          <Route
+            path="/vehiculos/editar/:id"
+            element={
+              <MainLayout>
+                <FormularioVehiculos />
               </MainLayout>
             }
           />

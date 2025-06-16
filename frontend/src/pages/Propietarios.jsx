@@ -35,6 +35,7 @@ const Propietarios = () => {
     try {
       await fetch(`http://localhost:3000/api/propietarios/${id}`, {
         method: 'DELETE',
+        credentials: "include",
       });
       setPropietarios(propietarios.filter(p => p.id_propietario !== id));
     } catch (error) {
@@ -55,16 +56,16 @@ const Propietarios = () => {
           </button>
         </div>
   
-        <div class="overflow-x-auto bg-base-100">
+        <div className="overflow-x-auto bg-base-100">
           <table className="w-full text-lg text-center table table-zebra">
             <thead className="bg-white text-black capitalize sticky top-0 z-10">
               <tr className="h-12 text-lg">
-                <th className="px-4 py-2">ID</th>
-                <th className="px-4 py-2">Empresa</th>
-                <th className="px-4 py-2">Nombre</th>
-                <th className="px-4 py-2">Nº Plazas</th>
-                <th className="px-4 py-2">Teléfono</th>
-                <th className="px-4 py-2">Acciones</th>
+                <th className="px-4 py-2 min-w-[80px] text-center">ID</th>
+                <th className="px-4 py-2 min-w-[80px] text-center">Empresa</th>
+                <th className="px-4 py-2 min-w-[80px] text-center">Nombre</th>
+                <th className="px-4 py-2 min-w-[80px] text-center">Nº Plazas</th>
+                <th className="px-4 py-2 min-w-[80px] text-center">Teléfono</th>
+                <th className="px-4 py-2 min-w-[80px] text-center">Acciones</th>
               </tr>
             </thead>
             <tbody className="bg-base-100 divide-y divide-base-700 text-base font-semibold">
@@ -73,7 +74,7 @@ const Propietarios = () => {
                   <td className="px-4 py-2">{prop.id_propietario}</td>
                   <td className="px-4 py-2">{prop.empresa}</td>
                   <td className="px-4 py-2">{prop.nombre}</td>
-                  <td className="px-4 py-2">{prop.num_plazas}</td>
+                  <td className="px-4 py-2">{prop.num_aparcamiento}</td>
                   <td className="px-4 py-2">{prop.telefono}</td>
                   <td className="px-4 py-2 text-center flex justify-center space-x-2">
                     <button
