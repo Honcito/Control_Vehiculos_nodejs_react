@@ -7,9 +7,12 @@ export const getControl = (req, res) => {
   const { matricula } = req.query;
 
   let query = `
-    SELECT * FROM control_vehiculos
-    WHERE DATE(fecha_entrada) >= DATE('now', '-2 days')
-  `;
+  SELECT c.*, v.num_aparcamiento 
+  FROM control_vehiculos c
+  LEFT JOIN vehiculos v ON c.cod_vehiculo = v.cod_vehiculo
+  WHERE DATE(c.fecha_entrada) >= DATE('now', '-2 days')
+`;
+
   const params = [];
 
   if (matricula && matricula.length >= 3) {
@@ -228,46 +231,40 @@ export const exportarControlPDF = (req, res) => {
       return res.status(500).json({ error: "Error al obtener datos para PDF" });
     }
 
-    // Crear PDF en modo apaisado
+    
+    //const PDFDocument = require("pdfkit");
     const doc = new PDFDocument({
       margin: 30,
       size: "A4",
       layout: "landscape",
     });
-    
-    // Headers para PDF
+
+    // Headers para que el PDF se abra en el navegador
     res.setHeader("Content-Type", "application/pdf");
-    res.setHeader("Content-Disposition", "attachment; filename=control_vehiculos.pdf");
-    
+    res.setHeader("Content-Disposition", "inline; filename=control_vehiculos.pdf");
+
     doc.pipe(res);
-    
+
     // Título centrado
     doc.fontSize(18).text("Control de Vehículos", { align: "center" });
     doc.moveDown();
-    
-    // Definir columnas y sus anchos
+
+    // Columnas (sin num_aparcamiento)
     const tableHeaders = [
-      { label: "Matrícula", width: 80 },
-      { label: "Empresa", width: 100 },
-      { label: "Nº Plaza", width: 70 },
-      { label: "Fecha Entrada", width: 110 },
-      { label: "Fecha Salida", width: 110 },
-      { label: "Observaciones", width: 200 },
+      { label: "Matrícula", width: 100 },
+      { label: "Empresa", width: 120 },
+      { label: "Fecha Entrada", width: 130 },
+      { label: "Fecha Salida", width: 130 },
+      { label: "Observaciones", width: 250 },
     ];
-    
+
     let startX = 30;
     let startY = doc.y;
     const baseRowHeight = 20;
-    
+
     function drawTableHeader(y) {
-      // Fondo encabezado gris
-      doc.rect(
-        startX,
-        y,
-        tableHeaders.reduce((acc, h) => acc + h.width, 0),
-        baseRowHeight
-      ).fill("#f0f0f0");
-    
+      doc.rect(startX, y, tableHeaders.reduce((acc, h) => acc + h.width, 0), baseRowHeight).fill("#f0f0f0");
+
       let x = startX;
       tableHeaders.forEach((header) => {
         doc.fillColor("black").font("Helvetica-Bold").fontSize(10)
@@ -277,11 +274,10 @@ export const exportarControlPDF = (req, res) => {
           });
         x += header.width;
       });
-    
-      // Líneas horizontales y verticales del encabezado
+
       doc.moveTo(startX, y).lineTo(startX + tableHeaders.reduce((acc, h) => acc + h.width, 0), y).stroke();
       doc.moveTo(startX, y + baseRowHeight).lineTo(startX + tableHeaders.reduce((acc, h) => acc + h.width, 0), y + baseRowHeight).stroke();
-    
+
       x = startX;
       tableHeaders.forEach((header) => {
         doc.moveTo(x, y).lineTo(x, y + baseRowHeight).stroke();
@@ -289,64 +285,50 @@ export const exportarControlPDF = (req, res) => {
       });
       doc.moveTo(x, y).lineTo(x, y + baseRowHeight).stroke();
     }
-    
+
     drawTableHeader(startY);
-    
+
     let y = startY + baseRowHeight;
-    
+
     rows.forEach((fila, i) => {
-      // Calcular altura de cada celda para ajustar altura fila
       const cellHeights = [
         doc.heightOfString(fila.matricula || "", { width: tableHeaders[0].width - 10 }),
         doc.heightOfString(fila.empresa || "", { width: tableHeaders[1].width - 10 }),
-        doc.heightOfString((fila.num_aparcamiento?.toString() || ""), { width: tableHeaders[2].width - 10 }),
-        doc.heightOfString(fila.fecha_entrada || "", { width: tableHeaders[3].width - 10 }),
-        doc.heightOfString(fila.fecha_salida || "", { width: tableHeaders[4].width - 10 }),
-        doc.heightOfString(fila.observaciones || "", { width: tableHeaders[5].width - 10 }),
+        doc.heightOfString(fila.fecha_entrada || "", { width: tableHeaders[2].width - 10 }),
+        doc.heightOfString(fila.fecha_salida || "", { width: tableHeaders[3].width - 10 }),
+        doc.heightOfString(fila.observaciones || "", { width: tableHeaders[4].width - 10 }),
       ];
-    
-      const maxHeight = Math.max(baseRowHeight, ...cellHeights) + 10; // +10 para algo de padding vertical
-    
-      // Si la fila sobrepasa el margen inferior, añadir página y repetir encabezado
+
+      const maxHeight = Math.max(baseRowHeight, ...cellHeights) + 10;
+
       if (y + maxHeight > doc.page.height - 50) {
         doc.addPage({ layout: "landscape", margin: 30 });
         y = 30;
         drawTableHeader(y);
         y += baseRowHeight;
       }
-    
-      // Fondo fila alternado
+
       if (i % 2 === 0) {
-        doc.rect(
-          startX,
-          y,
-          tableHeaders.reduce((acc, h) => acc + h.width, 0),
-          maxHeight
-        ).fill("#f9f9f9");
+        doc.rect(startX, y, tableHeaders.reduce((acc, h) => acc + h.width, 0), maxHeight).fill("#f9f9f9");
       }
-    
-      // Escribir texto con altura dinámica
+
       let x = startX;
       doc.font("Helvetica").fontSize(9).fillColor("black");
-    
+
       doc.text(fila.matricula || "", x + 5, y + 5, { width: tableHeaders[0].width - 10 });
       x += tableHeaders[0].width;
-    
+
       doc.text(fila.empresa || "", x + 5, y + 5, { width: tableHeaders[1].width - 10 });
       x += tableHeaders[1].width;
-    
-      doc.text(fila.num_aparcamiento?.toString() || "", x + 5, y + 5, { width: tableHeaders[2].width - 10 });
+
+      doc.text(fila.fecha_entrada || "", x + 5, y + 5, { width: tableHeaders[2].width - 10 });
       x += tableHeaders[2].width;
-    
-      doc.text(fila.fecha_entrada || "", x + 5, y + 5, { width: tableHeaders[3].width - 10 });
+
+      doc.text(fila.fecha_salida || "", x + 5, y + 5, { width: tableHeaders[3].width - 10 });
       x += tableHeaders[3].width;
-    
-      doc.text(fila.fecha_salida || "", x + 5, y + 5, { width: tableHeaders[4].width - 10 });
-      x += tableHeaders[4].width;
-    
-      doc.text(fila.observaciones || "", x + 5, y + 5, { width: tableHeaders[5].width - 10 });
-    
-      // Líneas de la fila
+
+      doc.text(fila.observaciones || "", x + 5, y + 5, { width: tableHeaders[4].width - 10 });
+
       let cellX = startX;
       for (const h of tableHeaders) {
         doc.moveTo(cellX, y).lineTo(cellX, y + maxHeight).stroke();
@@ -354,12 +336,10 @@ export const exportarControlPDF = (req, res) => {
       }
       doc.moveTo(cellX, y).lineTo(cellX, y + maxHeight).stroke();
       doc.moveTo(startX, y + maxHeight).lineTo(startX + tableHeaders.reduce((acc, h) => acc + h.width, 0), y + maxHeight).stroke();
-    
+
       y += maxHeight;
     });
-    
+
     doc.end();
-  }    
-
-
-  )}
+  });
+};
