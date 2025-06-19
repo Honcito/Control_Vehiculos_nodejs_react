@@ -8,6 +8,8 @@ npm install dotenv
 npm install nodemon
 npm install bcrypt
 npm install cors
+npm install pdfkit
+npm install node-cron
 
 Si dejamos el package.json con "type": "commonsjs" usaremos const express= require('express') si lo cambiamos a "types": "module" se tendrá que usar import express from 'express'
 Cambiamos en el package.json: "test": ... por "dev": "node server.js" para iniciar con npm run dev

@@ -18,7 +18,7 @@ const Vehiculos = () => {
         return res.json();
       })
       .then((data) => {
-        console.log("Respuesta del backend:", data);
+        //console.log("Respuesta del backend:", data);
         setVehiculos(data);
       })
       .catch((error) => console.error("Error cargando vehículos:", error));

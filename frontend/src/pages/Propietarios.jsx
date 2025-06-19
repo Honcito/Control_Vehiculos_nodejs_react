@@ -18,7 +18,7 @@ const Propietarios = () => {
         return res.json();
       })
       .then((data) => {
-        console.log("Respuesta del backend:", data);
+        //console.log("Respuesta del backend:", data);
         setPropietarios(data);
       })
       .catch((error) => console.error("Error cargando propietarios:", error));

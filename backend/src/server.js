@@ -4,6 +4,7 @@ import session from "express-session";
 import SQLiteStore from "connect-sqlite3";
 import dotenv from "dotenv";
 import { connectDB } from "./config/db.js";
+import "./tasks/backupTask.js";
 
 import authRoutes from "./routes/authRoutes.js"; // ⬅️ Faltaba importar esto
 import userRoutes from "./routes/userRoutes.js";
@@ -11,6 +12,7 @@ import propietarioRoutes from "./routes/propietarioRoutes.js";
 import vehiculoRoutes from "./routes/vehiculoRoutes.js";
 import controlVehiculosRoutes from "./routes/controlVehiculosRoutes.js";
 import { authMiddleware } from "./middleware/authMiddleware.js";
+
 
 dotenv.config();
 

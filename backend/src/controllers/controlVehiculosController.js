@@ -1,46 +1,55 @@
 import { getDB } from "../config/db.js";
+import PDFDocument from 'pdfkit'
 
-// GET ALL CONTROL VEHICULOS
+// GET ALL CONTROL VEHICULOS - últimos 2 días ordenados DESC
 export const getControl = (req, res) => {
   const db = getDB();
-  db.all(`SELECT * FROM control_vehiculos`, [], (err, rows) => {
-    if (err) return res.status(500).json({ error: err.message });
+  const { matricula } = req.query;
 
+  let query = `
+    SELECT * FROM control_vehiculos
+    WHERE DATE(fecha_entrada) >= DATE('now', '-2 days')
+  `;
+  const params = [];
+
+  if (matricula && matricula.length >= 3) {
+    query += ` AND matricula LIKE ?`;
+    params.push(matricula + "%");
+  }
+
+  query += ` ORDER BY datetime(fecha_entrada)`;
+
+  db.all(query, params, (err, rows) => {
+    if (err) return res.status(500).json({ error: err.message });
     res.json(rows);
   });
 };
 
+
 // CREATE CONTROL VEHICULOS
 export const createControl = (req, res) => {
   const db = getDB();
-  // if (!req.body || Object.keys(req.body).length === 0) {
-  //   return res
-  //     .status(400)
-  //     .json({ error: "El cuerpo de la solicitud está vacío o malformado." });
-  // }
-  const {
-    matricula,
-    empresa,
-    fecha_entrada,
-    fecha_salida,
-    observaciones,
-    num_aparcamiento,
-  } = req.body;
+
+  const { matricula, fecha_entrada, fecha_salida, observaciones } = req.body;
   const id_usuario = req.session.user?.id_usuario;
 
   if (!id_usuario) {
     return res
       .status(401)
-      .json({ error: "Sesión no válida o usuario no autenticado " });
+      .json({ error: "Sesión no válida o usuario no autenticado" });
   }
 
-  // Buscar matrícula en la base de datos
+  if (!matricula) {
+    return res.status(400).json({ error: "Matrícula es obligatoria" });
+  }
+
+  // Buscar matrícula en la base de datos para autocompletar
   db.get(
     `
-        SELECT p.empresa, v.num_aparcamiento, v.cod_vehiculo
-        FROM vehiculos v 
-        JOIN propietarios p ON v.id_propietario = p.id_propietario 
-        WHERE v.matricula = ?
+    SELECT p.empresa, v.num_aparcamiento, v.cod_vehiculo
+    FROM vehiculos v 
+    JOIN propietarios p ON v.propietario = p.id_propietario 
+    WHERE v.matricula = ?
     `,
     [matricula],
     (err, row) => {
@@ -60,16 +69,18 @@ export const createControl = (req, res) => {
       const cod_vehiculo = row.cod_vehiculo;
 
       // Insertar en la tabla de controles
-      const query = `INSERT INTO control_vehiculos (matricula, empresa, fecha_entrada, fecha_salida, observaciones, num_aparcamiento, id_usuario, cod_vehiculo) VALUES (?,?,?,?,?,?,?,?)`;
+      const query = `INSERT INTO control_vehiculos 
+        (matricula, empresa, fecha_entrada, fecha_salida, observaciones, num_aparcamiento, id_usuario, cod_vehiculo) 
+        VALUES (?,?,?,?,?,?,?,?)`;
 
       db.run(
         query,
         [
           matricula,
           empresa,
-          fecha_entrada,
-          fecha_salida,
-          observaciones,
+          fecha_entrada || null,
+          fecha_salida || null,
+          observaciones || null,
           num_aparcamiento,
           id_usuario,
           cod_vehiculo,
@@ -101,42 +112,48 @@ export const updateControl = (req, res) => {
   db.get(
     `SELECT * FROM control_vehiculos WHERE cod_control=?`,
     [id],
-    async (err, row) => {
+    (err, row) => {
       if (err) {
         return res.status(500).json({ error: err.message });
       }
       if (!row) {
         return res
           .status(404)
-          .json({ error: "Línea de control vehículos no encontrada " });
+          .json({ error: "Línea de control vehículos no encontrada" });
       }
 
-      try {
-        const sql = `UPDATE control_vehiculos SET matricula=?, fecha_entrada=?, fecha_salida=?, 
-      observaciones=? WHERE cod_control=?`;
-
-        db.run(
-          sql,
-          [matricula, fecha_entrada, fecha_salida, observaciones, id],
-          function (err) {
-            if (err) {
-              return res.status(500).json({ error: err.message });
-            }
-            if (this.changes === 0) {
-              return res.status(400).json({
-                message: "No se registraron cambios en esta línea de control",
-              });
-            }
-            res
-              .status(200)
-              .json({ message: "Línea de control actualizada con éxito" });
-          }
-        );
-      } catch (error) {
-        res
+      // Validar matrícula no vacía ni nula para no borrar ese dato
+      if (!matricula || matricula.trim() === "") {
+        return res
           .status(400)
-          .json({ error: "Error al actualizar la línea de control" });
+          .json({ error: "Matrícula no puede estar vacía" });
       }
+
+      const sql = `UPDATE control_vehiculos SET matricula=?, fecha_entrada=?, fecha_salida=?, observaciones=? WHERE cod_control=?`;
+
+      db.run(
+        sql,
+        [
+          matricula,
+          fecha_entrada || null,
+          fecha_salida || null,
+          observaciones || null,
+          id,
+        ],
+        function (err) {
+          if (err) {
+            return res.status(500).json({ error: err.message });
+          }
+          if (this.changes === 0) {
+            return res.status(400).json({
+              message: "No se registraron cambios en esta línea de control",
+            });
+          }
+          res
+            .status(200)
+            .json({ message: "Línea de control actualizada con éxito" });
+        }
+      );
     }
   );
 };
@@ -146,7 +163,6 @@ export const deleteControl = (req, res) => {
   const db = getDB();
   const id = req.params.id;
 
-  // Verificar si la línea de control existe
   db.get(
     `SELECT * FROM control_vehiculos WHERE cod_control=?`,
     [id],
@@ -154,10 +170,9 @@ export const deleteControl = (req, res) => {
       if (err) return res.status(500).json({ error: err.message });
       if (!row)
         return res
-          .status(400)
+          .status(404)
           .json({ error: "Línea de control no encontrada" });
 
-      // Si existe se procede a eliminar
       const sql = `DELETE FROM control_vehiculos WHERE cod_control=?`;
       db.run(sql, [id], function (err) {
         if (err) {
@@ -171,3 +186,180 @@ export const deleteControl = (req, res) => {
     }
   );
 };
+
+// GET Buscar matrícula para autocompletar datos
+export const buscarMatricula = (req, res) => {
+  const db = getDB();
+  const { matricula } = req.query;
+
+  if (!matricula) {
+    return res.status(400).json({ error: "Falta parámetro matrícula" });
+  }
+
+  db.get(
+    `SELECT p.empresa, v.num_aparcamiento, v.cod_vehiculo
+     FROM vehiculos v
+     JOIN propietarios p ON v.propietario = p.id_propietario
+     WHERE v.matricula = ?`,
+    [matricula],
+    (err, row) => {
+      if (err) {
+        return res.status(500).json({ error: "Error en consulta", detalles: err.message });
+      }
+      if (!row) {
+        return res.status(404).json({ error: "Matrícula no encontrada" });
+      }
+      res.json(row);
+    }
+  );
+};
+
+// EXPORT TO PDF
+export const exportarControlPDF = (req, res) => {
+  const db = getDB();
+
+  const query = `
+    SELECT * FROM control_vehiculos
+    ORDER BY datetime(fecha_entrada)
+  `;
+
+  db.all(query, [], (err, rows) => {
+    if (err) {
+      return res.status(500).json({ error: "Error al obtener datos para PDF" });
+    }
+
+    // Crear PDF en modo apaisado
+    const doc = new PDFDocument({
+      margin: 30,
+      size: "A4",
+      layout: "landscape",
+    });
+    
+    // Headers para PDF
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader("Content-Disposition", "attachment; filename=control_vehiculos.pdf");
+    
+    doc.pipe(res);
+    
+    // Título centrado
+    doc.fontSize(18).text("Control de Vehículos", { align: "center" });
+    doc.moveDown();
+    
+    // Definir columnas y sus anchos
+    const tableHeaders = [
+      { label: "Matrícula", width: 80 },
+      { label: "Empresa", width: 100 },
+      { label: "Nº Plaza", width: 70 },
+      { label: "Fecha Entrada", width: 110 },
+      { label: "Fecha Salida", width: 110 },
+      { label: "Observaciones", width: 200 },
+    ];
+    
+    let startX = 30;
+    let startY = doc.y;
+    const baseRowHeight = 20;
+    
+    function drawTableHeader(y) {
+      // Fondo encabezado gris
+      doc.rect(
+        startX,
+        y,
+        tableHeaders.reduce((acc, h) => acc + h.width, 0),
+        baseRowHeight
+      ).fill("#f0f0f0");
+    
+      let x = startX;
+      tableHeaders.forEach((header) => {
+        doc.fillColor("black").font("Helvetica-Bold").fontSize(10)
+          .text(header.label, x + 5, y + 5, {
+            width: header.width - 10,
+            align: "left",
+          });
+        x += header.width;
+      });
+    
+      // Líneas horizontales y verticales del encabezado
+      doc.moveTo(startX, y).lineTo(startX + tableHeaders.reduce((acc, h) => acc + h.width, 0), y).stroke();
+      doc.moveTo(startX, y + baseRowHeight).lineTo(startX + tableHeaders.reduce((acc, h) => acc + h.width, 0), y + baseRowHeight).stroke();
+    
+      x = startX;
+      tableHeaders.forEach((header) => {
+        doc.moveTo(x, y).lineTo(x, y + baseRowHeight).stroke();
+        x += header.width;
+      });
+      doc.moveTo(x, y).lineTo(x, y + baseRowHeight).stroke();
+    }
+    
+    drawTableHeader(startY);
+    
+    let y = startY + baseRowHeight;
+    
+    rows.forEach((fila, i) => {
+      // Calcular altura de cada celda para ajustar altura fila
+      const cellHeights = [
+        doc.heightOfString(fila.matricula || "", { width: tableHeaders[0].width - 10 }),
+        doc.heightOfString(fila.empresa || "", { width: tableHeaders[1].width - 10 }),
+        doc.heightOfString((fila.num_aparcamiento?.toString() || ""), { width: tableHeaders[2].width - 10 }),
+        doc.heightOfString(fila.fecha_entrada || "", { width: tableHeaders[3].width - 10 }),
+        doc.heightOfString(fila.fecha_salida || "", { width: tableHeaders[4].width - 10 }),
+        doc.heightOfString(fila.observaciones || "", { width: tableHeaders[5].width - 10 }),
+      ];
+    
+      const maxHeight = Math.max(baseRowHeight, ...cellHeights) + 10; // +10 para algo de padding vertical
+    
+      // Si la fila sobrepasa el margen inferior, añadir página y repetir encabezado
+      if (y + maxHeight > doc.page.height - 50) {
+        doc.addPage({ layout: "landscape", margin: 30 });
+        y = 30;
+        drawTableHeader(y);
+        y += baseRowHeight;
+      }
+    
+      // Fondo fila alternado
+      if (i % 2 === 0) {
+        doc.rect(
+          startX,
+          y,
+          tableHeaders.reduce((acc, h) => acc + h.width, 0),
+          maxHeight
+        ).fill("#f9f9f9");
+      }
+    
+      // Escribir texto con altura dinámica
+      let x = startX;
+      doc.font("Helvetica").fontSize(9).fillColor("black");
+    
+      doc.text(fila.matricula || "", x + 5, y + 5, { width: tableHeaders[0].width - 10 });
+      x += tableHeaders[0].width;
+    
+      doc.text(fila.empresa || "", x + 5, y + 5, { width: tableHeaders[1].width - 10 });
+      x += tableHeaders[1].width;
+    
+      doc.text(fila.num_aparcamiento?.toString() || "", x + 5, y + 5, { width: tableHeaders[2].width - 10 });
+      x += tableHeaders[2].width;
+    
+      doc.text(fila.fecha_entrada || "", x + 5, y + 5, { width: tableHeaders[3].width - 10 });
+      x += tableHeaders[3].width;
+    
+      doc.text(fila.fecha_salida || "", x + 5, y + 5, { width: tableHeaders[4].width - 10 });
+      x += tableHeaders[4].width;
+    
+      doc.text(fila.observaciones || "", x + 5, y + 5, { width: tableHeaders[5].width - 10 });
+    
+      // Líneas de la fila
+      let cellX = startX;
+      for (const h of tableHeaders) {
+        doc.moveTo(cellX, y).lineTo(cellX, y + maxHeight).stroke();
+        cellX += h.width;
+      }
+      doc.moveTo(cellX, y).lineTo(cellX, y + maxHeight).stroke();
+      doc.moveTo(startX, y + maxHeight).lineTo(startX + tableHeaders.reduce((acc, h) => acc + h.width, 0), y + maxHeight).stroke();
+    
+      y += maxHeight;
+    });
+    
+    doc.end();
+  }    
+
+
+  )}

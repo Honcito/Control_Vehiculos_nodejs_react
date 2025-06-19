@@ -11,6 +11,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import FormularioPropietario from "./pages/FormularioPropietario";
 import FormularioVehiculos from './pages/FormularioVehiculos';
+import FormularioUsuarios from './pages/FormularioUsuarios';
 
 function App() {
   return (
@@ -34,6 +35,22 @@ function App() {
             element={
               <MainLayout>
                 <Usuarios />
+              </MainLayout>
+            }
+          />
+          <Route
+            path="/usuarios/nuevo"
+            element={
+              <MainLayout>
+                <FormularioUsuarios />
+              </MainLayout>
+            }
+          />
+          <Route
+            path="/usuarios/editar/:id"
+            element={
+              <MainLayout>
+                <FormularioUsuarios />
               </MainLayout>
             }
           />
@@ -90,6 +107,22 @@ function App() {
             element={
               <MainLayout>
                 <ControlVehiculos />
+              </MainLayout>
+            }
+          />
+          <Route
+            path="/control_vehiculos/nuevo"
+            element={
+              <MainLayout>
+                <FormularioVehiculos />
+              </MainLayout>
+            }
+          />
+          <Route
+            path="/control_vehiculos/editar/:id"
+            element={
+              <MainLayout>
+                <FormularioVehiculos />
               </MainLayout>
             }
           />

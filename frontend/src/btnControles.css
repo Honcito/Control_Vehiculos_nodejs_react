@@ -1,0 +1,307 @@
+/* btnControles.css */
+
+/* LOGIN BUTTON reducido */
+.btn-login {
+  padding: 8px 20px;
+  border: none;
+  outline: none;
+  color: #fff;
+  cursor: pointer;
+  position: relative;
+  z-index: 0;
+  border-radius: 8px;
+  margin: 12px;
+  font-size: 0.9rem;
+}
+
+.btn-login::after {
+  content: "";
+  z-index: -1;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: #1b8369;
+  left: 0;
+  top: 0;
+  border-radius: 8px;
+}
+
+.btn-login::before {
+  content: "";
+  background: linear-gradient(45deg,
+      #ff0000,
+      #ff7300,
+      #fffb00,
+      #48ff00,
+      #00ffd5,
+      #002bff,
+      #ff00c8,
+      #ff0000);
+  position: absolute;
+  top: -1.5px;
+  left: -1.5px;
+  background-size: 600%;
+  z-index: -1;
+  width: calc(100% + 3px);
+  height: calc(100% + 3px);
+  filter: blur(5px);
+  animation: glowing 35s;
+  transition: opacity 0.3s ease-in-out;
+  border-radius: 8px;
+  opacity: 0;
+}
+
+.btn-login:hover::before {
+  opacity: 1;
+}
+
+.btn-login:active:after {
+  background: transparent;
+}
+
+.btn-login:active {
+  color: #000;
+  font-weight: bold;
+}
+
+/* ADD BUTTON reducido */
+.btn-add {
+  padding: 6px 8px;
+  border: none;
+  outline: none;
+  color: #fff;
+  cursor: pointer;
+  position: relative;
+  z-index: 0;
+  border-radius: 8px;
+  margin: 5px 10px;
+  font-size: 0.85rem;
+}
+
+.btn-add::after {
+  content: "";
+  z-index: -1;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: #0a609d;
+  left: 0;
+  top: 0;
+  border-radius: 8px;
+}
+
+.btn-add::before {
+  content: "";
+  background: linear-gradient(45deg,
+      #fc0202,
+      #f89a1e,
+      #f1f831,
+      #3fee41,
+      #45f8e0,
+      #0b6ba3,
+      #e62dfa,
+      #ff0000);
+  position: absolute;
+  top: -1.5px;
+  left: -1.5px;
+  background-size: 600%;
+  z-index: -1;
+  width: calc(100% + 3px);
+  height: calc(100% + 3px);
+  filter: blur(5px);
+  animation: glowing 35s;
+  transition: opacity 0.3s ease-in-out;
+  border-radius: 8px;
+  opacity: 0;
+}
+
+.btn-add:hover::before {
+  opacity: 1;
+}
+
+.btn-add:active:after {
+  background: transparent;
+}
+
+.btn-add:active {
+  color: #000;
+  font-weight: bold;
+}
+
+/* EDIT BUTTON reducido */
+.btn-update {
+  padding: 8px 20px;
+  border: none;
+  outline: none;
+  color: #fff;
+  cursor: pointer;
+  position: relative;
+  z-index: 0;
+  border-radius: 8px;
+  margin: 12px;
+  font-size: 0.9rem;
+}
+
+.btn-update::after {
+  content: "";
+  z-index: -1;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: #1b8369;
+  left: 0;
+  top: 0;
+  border-radius: 8px;
+}
+
+.btn-update::before {
+  content: "";
+  background: linear-gradient(45deg,
+      #fc0202,
+      #f89a1e,
+      #f1f831,
+      #3fee41,
+      #45f8e0,
+      #0b6ba3,
+      #e62dfa,
+      #ff0000);
+  position: absolute;
+  top: -1.5px;
+  left: -1.5px;
+  background-size: 600%;
+  z-index: -1;
+  width: calc(100% + 3px);
+  height: calc(100% + 3px);
+  filter: blur(5px);
+  animation: glowing 35s;
+  transition: opacity 0.3s ease-in-out;
+  border-radius: 8px;
+  opacity: 0;
+}
+
+.btn-update:hover::before {
+  opacity: 1;
+}
+
+.btn-update:active:after {
+  background: transparent;
+}
+
+.btn-update:active {
+  color: #000;
+  font-weight: bold;
+}
+
+/* DELETE BUTTON reducido */
+.btn-delete {
+  padding: 8px 20px;
+  border: none;
+  outline: none;
+  color: #fff;
+  cursor: pointer;
+  position: relative;
+  z-index: 0;
+  border-radius: 8px;
+  margin: 12px;
+  font-size: 0.9rem;
+}
+
+.btn-delete::after {
+  content: "";
+  z-index: -1;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: #ef3e3e;
+  left: 0;
+  top: 0;
+  border-radius: 8px;
+}
+
+.btn-delete::before {
+  content: "";
+  background: linear-gradient(45deg,
+      #fc0202,
+      #f89a1e,
+      #f1f831,
+      #3fee41,
+      #45f8e0,
+      #0b6ba3,
+      #e62dfa,
+      #ff0000);
+  position: absolute;
+  top: -1.5px;
+  left: -1.5px;
+  background-size: 600%;
+  z-index: -1;
+  width: calc(100% + 3px);
+  height: calc(100% + 3px);
+  filter: blur(5px);
+  animation: glowing 35s;
+  transition: opacity 0.3s ease-in-out;
+  border-radius: 8px;
+  opacity: 0;
+}
+
+.btn-delete:hover::before {
+  opacity: 1;
+}
+
+.btn-delete:active:after {
+  background: transparent;
+}
+
+.btn-delete:active {
+  color: #000;
+  font-weight: bold;
+}
+
+/* Filas y inputs más compactos para tabla controles */
+
+.table-controles tr {
+  height: 32px;
+  /* Altura menor en filas */
+}
+
+.table-controles input[type="text"],
+.table-controles input[type="number"],
+.table-controles input[type="datetime-local"] {
+  padding: 4px 6px;
+  font-size: 0.85rem;
+  height: 28px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+/* Opcional: para que los inputs disabled tengan fondo claro */
+.table-controles input[disabled],
+.table-controles input[readonly] {
+  background-color: #f0f0f0;
+  color: #777;
+}
+
+/* Quitar flechas de input type="number" */
+.table-controles input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+  width: 60px;
+}
+
+.table-controles input[type="number"]::-webkit-outer-spin-button,
+.table-controles input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.table-controles textarea {
+  width: 100%;
+  font-size: 0.85rem;
+  padding: 4px 6px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  min-height: 28px;
+  resize: vertical;
+}
+

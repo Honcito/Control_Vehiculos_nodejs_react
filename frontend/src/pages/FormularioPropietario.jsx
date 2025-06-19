@@ -25,7 +25,7 @@ const FormularioPropietario = () => {
           return res.json();
         })
         .then(data => {
-          console.log("Datos recibidos:", data); // 👈 Aquí puedes hacer console.log
+          //console.log("Datos recibidos:", data); // 👈 Aquí puedes hacer console.log
           setFormData(data);
         })
         .catch(err => console.error(err));

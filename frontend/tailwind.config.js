@@ -1,5 +1,8 @@
 // tailwind.config.js
 module.exports = {
+  content: [
+    "./src/**/*.{js,ts,jsx,tsx,html}", // Asegúrate de incluir esto
+  ],
   theme: {
     extend: {
       fontFamily: {
@@ -8,7 +11,7 @@ module.exports = {
     },
   },
   plugins: [require("daisyui")],
-  disyui: {
-    themes: ["abyss", "nord"],
+  daisyui: {
+    themes: ["abyss", "nord"], // <- Correctamente escrito
   },
 };

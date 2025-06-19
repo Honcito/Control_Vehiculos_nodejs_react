@@ -65,17 +65,23 @@ export const updateUser = async (req, res) => {
   const id = req.params.id;
   const { nombre, password, rol, telefono } = req.body;
 
-  // Verificar si el usuario existe
+  console.log("Datos recibidos:", { id, nombre, password, rol, telefono });
+
   db.get(
     "SELECT * FROM usuarios WHERE id_usuario = ?",
     [id],
     async (err, row) => {
-      if (err) return res.status(500).json({ error: err.message });
+      if (err) {
+        console.error("Error SELECT:", err);
+        return res.status(500).json({ error: err.message });
+      }
       if (!row) return res.status(404).json({ error: "Usuario no encontrado" });
 
       try {
         let hashedPassword = row.password;
-        if (password) {
+
+        if (password && password !== row.password) {
+          console.log("Encriptando nueva contraseña...");
           hashedPassword = await bcrypt.hash(password, 10);
         }
 
@@ -85,6 +91,7 @@ export const updateUser = async (req, res) => {
           [nombre, hashedPassword, rol, telefono, id],
           function (err) {
             if (err) {
+              console.error("Error UPDATE:", err);
               return res.status(500).json({ error: err.message });
             }
 
@@ -94,15 +101,18 @@ export const updateUser = async (req, res) => {
                 .json({ message: "No se registraron cambios en el usuario" });
             }
 
+            console.log("Usuario actualizado correctamente");
             res.status(200).json({ message: "Usuario actualizado con éxito" });
           }
         );
       } catch (error) {
+        console.error("Error en catch:", error);
         res.status(500).json({ error: "Error al actualizar el usuario" });
       }
     }
   );
 };
+
 
 export const deleteUser = (req, res) => {
   const db = getDB();

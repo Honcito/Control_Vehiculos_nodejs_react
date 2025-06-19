@@ -1,14 +1,21 @@
 @import "tailwindcss";
 
 @plugin "daisyui" {
-    themes: abyss --default, nord;
+  themes: abyss --default, nord;
 }
 
 :root {
-    --spacing: 0.25rem;
-    /* 4px */
+  --spacing: 0.25rem;
+  /* 4px */
 }
 
-
 body {
-    font-family: 'Jost', sans-serif; }
+  font-family: "Jost", sans-serif;
+}
+
+input:disabled {
+  background-color: transparent !important;
+  color: inherit !important;
+  opacity: 1 !important;
+  cursor: not-allowed;
+}
