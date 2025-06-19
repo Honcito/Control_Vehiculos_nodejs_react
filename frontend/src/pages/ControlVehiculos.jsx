@@ -6,10 +6,9 @@ const API_BASE = "http://localhost:3000/api/control_vehiculos";
 const API_EXPORT_PDF =
   "http://localhost:3000/api/control_vehiculos/exportar_pdf";
 
-  const exportarPDF = () => {
-    window.open(API_EXPORT_PDF, "_blank");
-  };
-  
+const exportarPDF = () => {
+  window.open(API_EXPORT_PDF, "_blank");
+};
 
 function ahoraLocalISO() {
   const d = new Date();
@@ -61,58 +60,53 @@ const ControlVehiculos = () => {
     esNueva: true,
   });
 
-  // Función para envolver el texto de matrícula con <mark> si coincide con el término buscado
   const resaltarTexto = (texto, termino) => {
     if (!termino) return texto;
     const regex = new RegExp(`(${termino})`, "gi");
     return texto.replace(regex, "<mark>$1</mark>");
   };
 
-  // const handleBuscar = async () => {
-  //   if (!matriculaBuscada || matriculaBuscada.length < 3) {
-  //     // Si el filtro está vacío o muy corto, recarga todo
-  //     cargarControles();
-  //     return;
-  //   }
+  const handleBuscar = async () => {
+    if (!matriculaBuscada || matriculaBuscada.length < 3) {
+      cargarControles();
+      return;
+    }
 
-  //   setLoading(true);
-  //   try {
-  //     const res = await axios.get(API_BASE, {
-  //       params: { matricula: matriculaBuscada },
-  //       withCredentials: true,
-  //     });
+    setLoading(true);
+    try {
+      const res = await axios.get(API_BASE, {
+        params: { matricula: matriculaBuscada },
+        withCredentials: true,
+      });
 
-  //     const data = res.data;
-  //     setFilas([...data, filaVacia()]);
+      const data = res.data;
+      setFilas([...data, filaVacia()]);
 
-  //     // Crear array con índices donde la matrícula coincide para navegar
-  //     const indices = data
-  //       .map((item, i) =>
-  //         item.matricula
-  //           ?.toLowerCase()
-  //           .startsWith(matriculaBuscada.toLowerCase())
-  //           ? i
-  //           : null
-  //       )
-  //       .filter((i) => i !== null);
+      const indices = data
+        .map((item, i) =>
+          item.matricula
+            ?.toLowerCase()
+            .startsWith(matriculaBuscada.toLowerCase())
+            ? i
+            : null
+        )
+        .filter((i) => i !== null);
 
-  //     setCoincidencias(indices);
-  //     setIndexResaltado(0);
-  //   } catch (error) {
-  //     console.error("Error al buscar matrícula", error);
-  //     setError("Error al buscar matrícula");
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
+      setCoincidencias(indices);
+      setIndexResaltado(0);
+    } catch (error) {
+      console.error("Error al buscar matrícula", error);
+      setError("Error al buscar matrícula");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  // Navegar a la siguiente coincidencia
   const siguienteResaltado = () => {
     if (coincidencias.length === 0) return;
     setIndexResaltado((prev) => (prev + 1) % coincidencias.length);
   };
 
-  // Navegar a la anterior coincidencia
   const anteriorResaltado = () => {
     if (coincidencias.length === 0) return;
     setIndexResaltado(
@@ -177,26 +171,27 @@ const ControlVehiculos = () => {
           credentials: "include",
           body: JSON.stringify(fila),
         });
+        const text = await res.text();
+        console.log("Respuesta POST:", res.status, text);
+
         if (!res.ok) {
-          const errorData = await res.json();
+          let errorData;
+          try {
+            errorData = JSON.parse(text);
+          } catch {
+            errorData = {};
+          }
           throw new Error(errorData.error || "Error al crear registro");
         }
-        const data = await res.json();
+        const data = JSON.parse(text);
+        console.log("Datos recibidos al crear:", data);
+
         const nuevasFilas = [...filas];
         nuevasFilas[index].cod_control = data.controlId;
         nuevasFilas[index].esNueva = false;
         setFilas([...nuevasFilas, filaVacia()]);
       } else {
-        const res = await fetch(`${API_BASE}/${fila.cod_control}`, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
-          body: JSON.stringify(fila),
-        });
-        if (!res.ok) {
-          const errorData = await res.json();
-          throw new Error(errorData.error || "Error al actualizar registro");
-        }
+        // actualizar...
       }
     } catch (e) {
       alert("Error: " + e.message);
@@ -282,9 +277,9 @@ const ControlVehiculos = () => {
         </div>
 
         <div className="overflow-x-auto bg-base-100 rounded-b-lg p-4">
-          <table className="table-controles w-full text-lg text-center table table-zebra border-collapse border border-base-300">
+          <table className="table-controles w-full text-center table table-zebra border-collapse border border-base-300">
             <thead className="bg-white text-black sticky top-0 z-10">
-              <tr className="h-12 text-lg">
+              <tr className="h-12 text-xl">
                 <th className="px-4 py-2 min-w-[100px] border border-base-300">
                   Matrícula
                 </th>
@@ -292,7 +287,7 @@ const ControlVehiculos = () => {
                   Empresa
                 </th>
                 <th className="px-4 py-2 min-w-[100px] border border-base-300">
-                  Nº Aparcamiento
+                  Nº Plaza
                 </th>
                 <th className="px-4 py-2 min-w-[160px] border border-base-300">
                   Fecha Salida
@@ -309,9 +304,8 @@ const ControlVehiculos = () => {
               </tr>
             </thead>
 
-            <tbody className="bg-base-100 divide-y divide-base-700 text-base font-semibold">
+            <tbody className="bg-base-100 divide-y divide-base-700 text-lg font-bold">
               {filas.map((fila, i) => {
-                // Para resaltar matrícula, solo si hay coincidencias y es la fila resaltada
                 let matriculaHTML = fila.matricula || "";
                 if (matriculaBuscada && fila.matricula) {
                   matriculaHTML = resaltarTexto(
@@ -330,24 +324,42 @@ const ControlVehiculos = () => {
                       esResaltado ? "bg-yellow-300" : ""
                     }`}
                   >
-                    <td
-                      className="border border-base-300 px-4 py-2 text-center"
-                      dangerouslySetInnerHTML={{ __html: matriculaHTML }}
-                    />
-                    <td className="border border-base-300 px-4 py-2">
+                    <td className="border border-base-300 px-2 py-2 text-center min-w-[120px]">
+                      {fila.esNueva ? (
+                        <input
+                          type="text"
+                          value={fila.matricula || ""}
+                          onChange={(e) =>
+                            handleInputChange(
+                              i,
+                              "matricula",
+                              e.target.value.toUpperCase()
+                            )
+                          }
+                          className="w-24 px-2 py-1 border border-base-300 rounded text-center"
+                          autoFocus
+                        />
+                      ) : (
+                        <span
+                          dangerouslySetInnerHTML={{ __html: matriculaHTML }}
+                        />
+                      )}
+                    </td>
+                    <td className="border border-base-300 px-4 py-2 min-w-[220px]">
                       <input
                         type="text"
                         value={fila.empresa || ""}
                         disabled
-                        className="px-2 py-1 border border-base-300 rounded bg-base-200 text-base-content text-center"
+                        className="w-68 px-2 py-1 border border-base-300 rounded bg-base-200 text-base-content text-center"
                       />
                     </td>
+
                     <td className="border border-base-300 px-4 py-2">
                       <input
                         type="number"
                         value={fila.num_aparcamiento || ""}
                         disabled
-                        className="px-2 py-1 border border-base-300 rounded bg-base-200 cursor-not-allowed text-center"
+                        className="px-2 py-1 border border-base-300 rounded bg-base-200 cursor-not-allowed text-center font-extrabold"
                       />
                     </td>
                     <td className="border border-base-300 px-4 py-2">
@@ -358,7 +370,7 @@ const ControlVehiculos = () => {
                         onChange={(e) =>
                           handleInputChange(i, "fecha_salida", e.target.value)
                         }
-                        className="px-2 py-1 border border-base-400 rounded text-center"
+                        className="px-2 py-1 border border-base-400 rounded text-center text-lg"
                       />
                     </td>
                     <td className="border border-base-300 px-4 py-2">
