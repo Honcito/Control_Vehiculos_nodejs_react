@@ -166,8 +166,10 @@ export const deleteControl = (req, res) => {
   const db = getDB();
   const id = req.params.id;
 
+  console.log('Eliminando control con ID:', id); // ✔️ Para depurar
+
   db.get(
-    `SELECT * FROM control_vehiculos WHERE cod_control=?`,
+    `SELECT * FROM control_vehiculos WHERE cod_control = ?`,
     [id],
     (err, row) => {
       if (err) return res.status(500).json({ error: err.message });
@@ -176,10 +178,10 @@ export const deleteControl = (req, res) => {
           .status(404)
           .json({ error: "Línea de control no encontrada" });
 
-      const sql = `DELETE FROM control_vehiculos WHERE cod_control=?`;
+      const sql = `DELETE FROM control_vehiculos WHERE cod_control = ?`;
       db.run(sql, [id], function (err) {
         if (err) {
-          return res.status(500).json({ err: err.message });
+          return res.status(500).json({ error: err.message }); // ✔️ Corregido aquí
         }
 
         res
@@ -189,6 +191,7 @@ export const deleteControl = (req, res) => {
     }
   );
 };
+
 
 // GET Buscar matrícula para autocompletar datos
 export const buscarMatricula = (req, res) => {

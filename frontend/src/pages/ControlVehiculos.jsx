@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import toast, { Toaster } from "react-hot-toast";  // <-- importamos toast
 import "../btnControles.css";
 
 const API_BASE = "http://localhost:3000/api/control_vehiculos";
-const API_EXPORT_PDF =
-  "http://localhost:3000/api/control_vehiculos/exportar_pdf";
+const API_EXPORT_PDF = "http://localhost:3000/api/control_vehiculos/exportar_pdf";
 
 const exportarPDF = () => {
   window.open(API_EXPORT_PDF, "_blank");
@@ -16,6 +16,58 @@ function ahoraLocalISO() {
   const localISO = new Date(d - tzOffset).toISOString().slice(0, 16);
   return localISO;
 }
+
+// Función para confirmar borrado usando toast con botones
+const confirmarBorrado = (mensaje) => {
+  return new Promise((resolve) => {
+    const id = toast(
+      (t) => (
+        <div>
+          <p>{mensaje}</p>
+          <div style={{ marginTop: 10 }}>
+            <button
+              onClick={() => {
+                toast.dismiss(id);
+                resolve(true);
+              }}
+              style={{
+                marginRight: "10px",
+                padding: "6px 12px",
+                backgroundColor: "#d33",
+                color: "white",
+                border: "none",
+                borderRadius: "4px",
+                cursor: "pointer",
+              }}
+            >
+              Confirmar
+            </button>
+            <button
+              onClick={() => {
+                toast.dismiss(id);
+                resolve(false);
+              }}
+              style={{
+                padding: "6px 12px",
+                backgroundColor: "#aaa",
+                color: "black",
+                border: "none",
+                borderRadius: "4px",
+                cursor: "pointer",
+              }}
+            >
+              Cancelar
+            </button>
+          </div>
+        </div>
+      ),
+      {
+        duration: Infinity,
+        position: "top-center",
+      }
+    );
+  });
+};
 
 const ControlVehiculos = () => {
   const [filas, setFilas] = useState([]);
@@ -37,7 +89,7 @@ const ControlVehiculos = () => {
       });
       if (!res.ok) throw new Error("Error al cargar controles");
       const data = await res.json();
-      console.log("Número de filas recibidas:", data.length);
+      console.log(data);
       setFilas([...data, filaVacia()]);
       setCoincidencias([]);
       setIndexResaltado(0);
@@ -141,9 +193,7 @@ const ControlVehiculos = () => {
     if (!matricula || matricula.length < 6) return null;
     try {
       const res = await fetch(
-        `${API_BASE}/buscar_matricula?matricula=${encodeURIComponent(
-          matricula
-        )}`,
+        `${API_BASE}/buscar_matricula?matricula=${encodeURIComponent(matricula)}`,
         {
           credentials: "include",
         }
@@ -195,7 +245,7 @@ const ControlVehiculos = () => {
         // actualizar...
       }
     } catch (e) {
-      alert("Error: " + e.message);
+      toast.error("Error: " + e.message);
     }
   };
 
@@ -205,7 +255,12 @@ const ControlVehiculos = () => {
       setFilas(filas.filter((_, i) => i !== index));
       return;
     }
-    if (!window.confirm("¿Seguro que quieres borrar esta fila?")) return;
+
+    // Usamos confirmación toast
+    const confirmacion = await confirmarBorrado(
+      `¿Seguro que quieres borrar la fila con matrícula ${fila.matricula}?`
+    );
+    if (!confirmacion) return;
 
     try {
       const res = await fetch(`${API_BASE}/${fila.cod_control}`, {
@@ -216,9 +271,11 @@ const ControlVehiculos = () => {
         const errorData = await res.json();
         throw new Error(errorData.error || "Error al borrar registro");
       }
+
       setFilas(filas.filter((_, i) => i !== index));
+      toast.success("Fila eliminada correctamente.");
     } catch (e) {
-      alert("Error: " + e.message);
+      toast.error("Error: " + e.message);
     }
   };
 
@@ -247,9 +304,7 @@ const ControlVehiculos = () => {
               type="text"
               placeholder="Buscar matrícula..."
               value={matriculaBuscada}
-              onChange={(e) =>
-                setMatriculaBuscada(e.target.value.toUpperCase())
-              }
+              onChange={(e) => setMatriculaBuscada(e.target.value.toUpperCase())}
               className="border px-2 py-1 rounded text-center"
             />
           </div>
@@ -309,21 +364,15 @@ const ControlVehiculos = () => {
               {filas.map((fila, i) => {
                 let matriculaHTML = fila.matricula || "";
                 if (matriculaBuscada && fila.matricula) {
-                  matriculaHTML = resaltarTexto(
-                    fila.matricula,
-                    matriculaBuscada
-                  );
+                  matriculaHTML = resaltarTexto(fila.matricula, matriculaBuscada);
                 }
                 const esResaltado =
-                  coincidencias.length > 0 &&
-                  coincidencias[indexResaltado] === i;
+                  coincidencias.length > 0 && coincidencias[indexResaltado] === i;
 
                 return (
                   <tr
                     key={fila.cod_control ?? `nueva-${i}`}
-                    className={`hover:bg-base-300 ${
-                      esResaltado ? "bg-yellow-300" : ""
-                    }`}
+                    className={`hover:bg-base-300 ${esResaltado ? "bg-yellow-300" : ""}`}
                   >
                     <td className="border border-base-300 px-2 py-2 text-center min-w-[120px]">
                       {fila.esNueva ? (
@@ -331,19 +380,13 @@ const ControlVehiculos = () => {
                           type="text"
                           value={fila.matricula || ""}
                           onChange={(e) =>
-                            handleInputChange(
-                              i,
-                              "matricula",
-                              e.target.value.toUpperCase()
-                            )
+                            handleInputChange(i, "matricula", e.target.value.toUpperCase())
                           }
                           className="w-24 px-2 py-1 border border-base-300 rounded text-center"
                           autoFocus
                         />
                       ) : (
-                        <span
-                          dangerouslySetInnerHTML={{ __html: matriculaHTML }}
-                        />
+                        <span dangerouslySetInnerHTML={{ __html: matriculaHTML }} />
                       )}
                     </td>
                     <td className="border border-base-300 px-4 py-2 min-w-[220px]">
@@ -368,9 +411,7 @@ const ControlVehiculos = () => {
                         type="datetime-local"
                         value={fila.fecha_salida || ""}
                         onClick={() => handleFechaClick(i, "fecha_salida")}
-                        onChange={(e) =>
-                          handleInputChange(i, "fecha_salida", e.target.value)
-                        }
+                        onChange={(e) => handleInputChange(i, "fecha_salida", e.target.value)}
                         className="px-2 py-1 border border-base-400 rounded text-center text-lg"
                       />
                     </td>
@@ -379,18 +420,14 @@ const ControlVehiculos = () => {
                         type="datetime-local"
                         value={fila.fecha_entrada || ""}
                         onClick={() => handleFechaClick(i, "fecha_entrada")}
-                        onChange={(e) =>
-                          handleInputChange(i, "fecha_entrada", e.target.value)
-                        }
+                        onChange={(e) => handleInputChange(i, "fecha_entrada", e.target.value)}
                         className="px-2 py-1 border border-base-400 rounded text-center"
                       />
                     </td>
                     <td className="border border-base-300 px-4 py-2">
                       <textarea
                         value={fila.observaciones ?? ""}
-                        onChange={(e) =>
-                          handleInputChange(i, "observaciones", e.target.value)
-                        }
+                        onChange={(e) => handleInputChange(i, "observaciones", e.target.value)}
                         className="px-2 py-1 border border-base-400 rounded resize-y overflow-auto min-h-[32px]"
                         rows="1"
                       />
@@ -417,10 +454,7 @@ const ControlVehiculos = () => {
 
               {filas.length === 0 && (
                 <tr>
-                  <td
-                    colSpan="7"
-                    className="text-center py-4 text-base-content opacity-50"
-                  >
+                  <td colSpan="7" className="text-center py-4 text-base-content opacity-50">
                     No hay registros.
                   </td>
                 </tr>
@@ -429,6 +463,9 @@ const ControlVehiculos = () => {
           </table>
         </div>
       </div>
+
+      {/* Agregamos el Toaster para que funcionen los toasts */}
+      <Toaster />
     </div>
   );
 };
