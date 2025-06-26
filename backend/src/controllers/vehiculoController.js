@@ -65,7 +65,7 @@ export const createVehicle = (req, res) => {
   }
 
   const sql = `
-    INSERT INTO vehiculos (matricula, num_aparcamiento, observaciones, propietario)
+    INSERT INTO vehiculos (matricula, num_aparcamiento, observaciones, id_propietario)
     VALUES (?, ?, ?, ?)
   `;
 
@@ -87,7 +87,7 @@ export const updateVehicle = (req, res) => {
 
     const sql = `
       UPDATE vehiculos
-      SET matricula = ?, num_aparcamiento = ?, observaciones = ?, propietario = ?
+      SET matricula = ?, num_aparcamiento = ?, observaciones = ?, id_propietario = ?
       WHERE cod_vehiculo = ?
     `;
 

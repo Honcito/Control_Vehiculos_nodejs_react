@@ -8,7 +8,7 @@ const FormularioVehiculos = () => {
     matricula: "",
     num_aparcamiento: "",
     observaciones: "",
-    propietario: "", // guardaremos id_propietario aquí
+    id_propietario: "", // guardaremos id_propietario aquí
     nombre_propietario: "",
     telefono_propietario: "",
     empresa: "", // para mostrar nombre empresa en select
@@ -49,7 +49,7 @@ const FormularioVehiculos = () => {
             matricula: data.matricula || "",
             num_aparcamiento: data.num_aparcamiento || "",
             observaciones: data.observaciones || "",
-            propietario: data.propietario || "",
+            id_propietario: data.id_propietario ? data.id_propietario.toString() : "",
             nombre_propietario: data.nombre_propietario || "",
             telefono_propietario: data.telefono_propietario || "",
             empresa: data.empresa || "",
@@ -90,7 +90,7 @@ const FormularioVehiculos = () => {
       matricula: formData.matricula,
       num_aparcamiento: formData.num_aparcamiento,
       observaciones: formData.observaciones,
-      id_propietario: formData.propietario,
+      id_propietario: formData.id_propietario,
     };
   
     fetch(url, {
@@ -143,11 +143,11 @@ const FormularioVehiculos = () => {
               type="number"
               name="num_aparcamiento"
               placeholder="Número de aparcamiento"
-              value={formData.num_aparcamiento}
+              value={formData.num_aparcamiento ?? ""}
               onChange={handleChange}
               className="w-60 h-10 px-4 text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 border border-gray-200 rounded text-gray-600 text-left"
               required
-              min={1}
+              min={0}
             />
           </div>
 
@@ -173,7 +173,7 @@ const FormularioVehiculos = () => {
           <div className="mb-8 flex items-center justify-center">
             <select
               name="propietario"
-              value={formData.propietario}
+              value={formData.id_propietario}
               onChange={handleEmpresaChange}
               className="w-60 h-10 px-4 text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 border border-gray-200 rounded text-gray-600"
               required

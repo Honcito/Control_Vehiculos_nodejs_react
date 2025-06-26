@@ -84,6 +84,8 @@ export const deleteOwner = (req, res) => {
   const db = getDB();
   const id = req.params.id;
 
+  console.log("ID recibido para eliminar:", id); // 👈 Esto es lo que quiero que pruebes
+
   db.get(
     "SELECT * FROM propietarios WHERE id_propietario = ?",
     [id],
@@ -97,9 +99,18 @@ export const deleteOwner = (req, res) => {
         [id],
         function (err) {
           if (err) return res.status(500).json({ error: err.message });
+
+          console.log("Filas eliminadas:", this.changes); // 👈 Esto también
+
+          if (this.changes === 0)
+            return res
+              .status(404)
+              .json({ error: "No se eliminó ningún registro" });
+
           res.status(200).json({ message: "Propietario eliminado con éxito" });
         }
       );
     }
   );
 };
+
