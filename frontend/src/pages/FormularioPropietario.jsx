@@ -101,7 +101,7 @@ const FormularioPropietario = () => {
         </div>
         <br/>
         <div className="mb-8 flex items-center justify-center">
-            <label className="w-60 text-xl">Nombre:</label>
+            <label className="w-60 text-xl">Nº plazas:</label>
           </div>
         <div className="mb-8 flex items-center justify-center">
         <input
