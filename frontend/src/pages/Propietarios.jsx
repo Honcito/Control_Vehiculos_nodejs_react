@@ -44,17 +44,18 @@ const Propietarios = () => {
   };
 
   return (
-    <div className="min-h-screen bg-base-100 text-base-content">
-      <div className="bg-base-200 rounded-lg shadow-sm">
-        <div className="bg-base-500 rounded flex place-items-center justify-between px-4 py-3">
-          <h2 className="text-3xl font-bold">Lista de Propietarios</h2>
-          <button
-            className="btn-add"
-            onClick={() => navigate("/propietarios/nuevo")}
-          >
-            Añadir Propietario
-          </button>
-        </div>
+    <div className="min-h-screen bg-base-100 text-base-content px-8 py-6">
+  <div className="bg-base-200 rounded-lg shadow-sm p-4">
+    <div className="bg-base-500 rounded flex place-items-center justify-between px-8 py-3">
+      <h2 className="text-3xl font-bold">Lista de Propietarios</h2>
+      <button
+        className="btn-add"
+        onClick={() => navigate("/propietarios/nuevo")}
+      >
+        Añadir Propietario
+      </button>
+    </div>
+
   
         <div className="overflow-x-auto bg-base-100">
           <table className="w-full text-lg text-center table table-zebra">

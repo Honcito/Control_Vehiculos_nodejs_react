@@ -51,7 +51,7 @@ export const createControl = (req, res) => {
     `
     SELECT p.empresa, v.num_aparcamiento, v.cod_vehiculo
     FROM vehiculos v 
-    JOIN propietarios p ON v.propietario = p.id_propietario 
+    JOIN propietarios p ON v.id_propietario = p.id_propietario 
     WHERE v.matricula = ?
     `,
     [matricula],
@@ -202,7 +202,7 @@ export const buscarMatricula = (req, res) => {
   db.get(
     `SELECT p.empresa, v.num_aparcamiento, v.cod_vehiculo
      FROM vehiculos v
-     JOIN propietarios p ON v.propietario = p.id_propietario
+     JOIN propietarios p ON v.id_propietario = p.id_propietario
      WHERE v.matricula = ?`,
     [matricula],
     (err, row) => {

@@ -11,7 +11,7 @@ export const getAllVehicles = (req, res) => {
          p.telefono as propietario_telefono,
          p.empresa as propietario_empresa
   FROM vehiculos v
-  LEFT JOIN propietarios p ON v.propietario = p.id_propietario
+  LEFT JOIN propietarios p ON v.id_propietario = p.id_propietario
 `;
 
 
@@ -44,7 +44,7 @@ export const getVehicleById = (req, res) => {
   db.get(
     `SELECT v.*, p.empresa, p.nombre as nombre_propietario, p.telefono as telefono_propietario
      FROM vehiculos v
-     LEFT JOIN propietarios p ON v.propietario = p.id_propietario
+     LEFT JOIN propietarios p ON v.id_propietario = p.id_propietario
      WHERE v.cod_vehiculo = ?`,
     [id],
     (err, row) => {

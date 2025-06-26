@@ -2,8 +2,8 @@ import cron from "node-cron";
 import fs from "fs";
 import path from "path";
 
-const DB_PATH = "c:/database/control_vehiculos.db";
-const BACKUP_DIR = "c:/Control_Backup";
+const DB_PATH = "c:/database/control_vehiculos_react.db";
+const BACKUP_DIR = "c:/Control_Backup_react";
 
 if (!fs.existsSync(BACKUP_DIR)) {
   fs.mkdirSync(BACKUP_DIR, { recursive: true });
