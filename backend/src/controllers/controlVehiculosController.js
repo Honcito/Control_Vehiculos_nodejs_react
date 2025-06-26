@@ -73,8 +73,8 @@ export const createControl = (req, res) => {
 
       // Insertar en la tabla de controles
       const query = `INSERT INTO control_vehiculos 
-        (matricula, empresa, fecha_entrada, fecha_salida, observaciones, num_aparcamiento, id_usuario, cod_vehiculo) 
-        VALUES (?,?,?,?,?,?,?,?)`;
+        (matricula, empresa, fecha_entrada, fecha_salida, observaciones, id_usuario, cod_vehiculo) 
+        VALUES (?,?,?,?,?,?,?)`;
 
       db.run(
         query,
@@ -84,7 +84,6 @@ export const createControl = (req, res) => {
           fecha_entrada || null,
           fecha_salida || null,
           observaciones || null,
-          num_aparcamiento,
           id_usuario,
           cod_vehiculo,
         ],
