@@ -10,7 +10,7 @@ export const getControl = (req, res) => {
   SELECT c.*, v.num_aparcamiento 
   FROM control_vehiculos c
   LEFT JOIN vehiculos v ON c.cod_vehiculo = v.cod_vehiculo
-  WHERE (c.fecha_salida IS NULL OR DATE(c.fecha_salida) >= DATE('now', '-2 days'))
+  WHERE datetime(c.fecha_salida) >= datetime('now', '-2 days')
   `;
 
   const params = [];

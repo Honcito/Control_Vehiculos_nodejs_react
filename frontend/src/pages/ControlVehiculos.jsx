@@ -387,7 +387,7 @@ const ControlVehiculos = () => {
                     </td>
                     <td className="border border-base-300 px-4 py-2">
                       <textarea
-                        value={fila.observaciones}
+                        value={fila.observaciones ?? ""}
                         onChange={(e) =>
                           handleInputChange(i, "observaciones", e.target.value)
                         }
