@@ -37,6 +37,7 @@ const ControlVehiculos = () => {
       });
       if (!res.ok) throw new Error("Error al cargar controles");
       const data = await res.json();
+      console.log("Número de filas recibidas:", data.length);
       setFilas([...data, filaVacia()]);
       setCoincidencias([]);
       setIndexResaltado(0);

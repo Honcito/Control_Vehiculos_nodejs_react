@@ -10,8 +10,8 @@ export const getControl = (req, res) => {
   SELECT c.*, v.num_aparcamiento 
   FROM control_vehiculos c
   LEFT JOIN vehiculos v ON c.cod_vehiculo = v.cod_vehiculo
-  WHERE DATE(c.fecha_entrada) >= DATE('now', '-2 days')
-`;
+  WHERE (c.fecha_salida IS NULL OR DATE(c.fecha_salida) >= DATE('now', '-2 days'))
+  `;
 
   const params = [];
 
@@ -20,13 +20,14 @@ export const getControl = (req, res) => {
     params.push(matricula + "%");
   }
 
-  query += ` ORDER BY datetime(fecha_entrada)`;
+  query += ` ORDER BY datetime(fecha_salida)`;
 
   db.all(query, params, (err, rows) => {
     if (err) return res.status(500).json({ error: err.message });
     res.json(rows);
   });
 };
+
 
 
 // CREATE CONTROL VEHICULOS
