@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import toast, { Toaster } from "react-hot-toast";  // <-- importamos toast
+import toast, { Toaster } from "react-hot-toast";
 import "../btnControles.css";
 
 const API_BASE = "http://localhost:3000/api/control_vehiculos";
@@ -13,11 +13,9 @@ const exportarPDF = () => {
 function ahoraLocalISO() {
   const d = new Date();
   const tzOffset = d.getTimezoneOffset() * 60000;
-  const localISO = new Date(d - tzOffset).toISOString().slice(0, 16);
-  return localISO;
+  return new Date(d - tzOffset).toISOString().slice(0, 16);
 }
 
-// Función para confirmar borrado usando toast con botones
 const confirmarBorrado = (mensaje) => {
   return new Promise((resolve) => {
     const id = toast(
@@ -84,12 +82,9 @@ const ControlVehiculos = () => {
   const cargarControles = async () => {
     setLoading(true);
     try {
-      const res = await fetch(API_BASE, {
-        credentials: "include",
-      });
+      const res = await fetch(API_BASE, { credentials: "include" });
       if (!res.ok) throw new Error("Error al cargar controles");
       const data = await res.json();
-      console.log(data);
       setFilas([...data, filaVacia()]);
       setCoincidencias([]);
       setIndexResaltado(0);
@@ -121,34 +116,26 @@ const ControlVehiculos = () => {
 
   const handleBuscar = async () => {
     if (!matriculaBuscada || matriculaBuscada.length < 3) {
-      cargarControles();
-      return;
+      return cargarControles();
     }
-
     setLoading(true);
     try {
       const res = await axios.get(API_BASE, {
         params: { matricula: matriculaBuscada },
         withCredentials: true,
       });
-
       const data = res.data;
       setFilas([...data, filaVacia()]);
-
       const indices = data
         .map((item, i) =>
-          item.matricula
-            ?.toLowerCase()
-            .startsWith(matriculaBuscada.toLowerCase())
+          item.matricula?.toLowerCase().startsWith(matriculaBuscada.toLowerCase())
             ? i
             : null
         )
         .filter((i) => i !== null);
-
       setCoincidencias(indices);
       setIndexResaltado(0);
-    } catch (error) {
-      console.error("Error al buscar matrícula", error);
+    } catch {
       setError("Error al buscar matrícula");
     } finally {
       setLoading(false);
@@ -156,21 +143,20 @@ const ControlVehiculos = () => {
   };
 
   const siguienteResaltado = () => {
-    if (coincidencias.length === 0) return;
+    if (!coincidencias.length) return;
     setIndexResaltado((prev) => (prev + 1) % coincidencias.length);
   };
 
   const anteriorResaltado = () => {
-    if (coincidencias.length === 0) return;
-    setIndexResaltado(
-      (prev) => (prev - 1 + coincidencias.length) % coincidencias.length
+    if (!coincidencias.length) return;
+    setIndexResaltado((prev) =>
+      (prev - 1 + coincidencias.length) % coincidencias.length
     );
   };
 
   const handleInputChange = (index, campo, valor) => {
     const nuevasFilas = [...filas];
     nuevasFilas[index][campo] = valor;
-
     if (campo === "matricula") {
       autocompletarDatos(valor).then((data) => {
         if (data) {
@@ -194,14 +180,11 @@ const ControlVehiculos = () => {
     try {
       const res = await fetch(
         `${API_BASE}/buscar_matricula?matricula=${encodeURIComponent(matricula)}`,
-        {
-          credentials: "include",
-        }
+        { credentials: "include" }
       );
       if (!res.ok) return null;
       return await res.json();
-    } catch (error) {
-      console.log(error);
+    } catch {
       return null;
     }
   };
@@ -223,8 +206,6 @@ const ControlVehiculos = () => {
           body: JSON.stringify(fila),
         });
         const text = await res.text();
-        console.log("Respuesta POST:", res.status, text);
-
         if (!res.ok) {
           let errorData;
           try {
@@ -235,14 +216,10 @@ const ControlVehiculos = () => {
           throw new Error(errorData.error || "Error al crear registro");
         }
         const data = JSON.parse(text);
-        console.log("Datos recibidos al crear:", data);
-
-        const nuevasFilas = [...filas];
-        nuevasFilas[index].cod_control = data.controlId;
-        nuevasFilas[index].esNueva = false;
-        setFilas([...nuevasFilas, filaVacia()]);
-      } else {
-        // actualizar...
+        const nuevas = [...filas];
+        nuevas[index].cod_control = data.controlId;
+        nuevas[index].esNueva = false;
+        setFilas([...nuevas, filaVacia()]);
       }
     } catch (e) {
       toast.error("Error: " + e.message);
@@ -252,26 +229,21 @@ const ControlVehiculos = () => {
   const borrarFila = async (index) => {
     const fila = filas[index];
     if (fila.esNueva) {
-      setFilas(filas.filter((_, i) => i !== index));
-      return;
+      return setFilas(filas.filter((_, i) => i !== index));
     }
-
-    // Usamos confirmación toast
-    const confirmacion = await confirmarBorrado(
+    const confirm = await confirmarBorrado(
       `¿Seguro que quieres borrar la fila con matrícula ${fila.matricula}?`
     );
-    if (!confirmacion) return;
-
+    if (!confirm) return;
     try {
       const res = await fetch(`${API_BASE}/${fila.cod_control}`, {
         method: "DELETE",
         credentials: "include",
       });
       if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData.error || "Error al borrar registro");
+        const err = await res.json();
+        throw new Error(err.error || "Error al borrar registro");
       }
-
       setFilas(filas.filter((_, i) => i !== index));
       toast.success("Fila eliminada correctamente.");
     } catch (e) {
@@ -287,16 +259,11 @@ const ControlVehiculos = () => {
       <div className="bg-base-200 rounded-lg shadow-sm">
         <div className="bg-base-500 rounded-t-lg flex items-center justify-between px-4 py-3">
           <h2 className="text-3xl font-bold">Control de Vehículos</h2>
-          <button
-            onClick={exportarPDF}
-            className="btn-add"
-            style={{ marginBottom: "1rem" }}
-          >
+          <button onClick={exportarPDF} className="btn-add mb-4">
             Exportar a PDF
           </button>
-
           <div className="flex items-center gap-x-2 mb-4">
-            <label className="font-semibold" htmlFor="buscarMatricula">
+            <label htmlFor="buscarMatricula" className="font-semibold">
               Buscar Matrícula
             </label>
             <input
@@ -304,11 +271,12 @@ const ControlVehiculos = () => {
               type="text"
               placeholder="Buscar matrícula..."
               value={matriculaBuscada}
-              onChange={(e) => setMatriculaBuscada(e.target.value.toUpperCase())}
+              onChange={(e) =>
+                setMatriculaBuscada(e.target.value.toUpperCase())
+              }
               className="border px-2 py-1 rounded text-center"
             />
           </div>
-
           {coincidencias.length > 0 && (
             <div className="ml-4 flex items-center space-x-2 text-white">
               <button
@@ -334,51 +302,24 @@ const ControlVehiculos = () => {
 
         <div className="overflow-x-auto bg-base-100 rounded-b-lg p-4">
           <table className="table-controles w-full text-center table table-zebra border-collapse border border-base-300">
-            <thead className="bg-white text-black sticky top-0 z-10">
-              <tr className="h-12 text-xl">
-                <th className="px-4 py-2 min-w-[100px] border border-base-300">
-                  Matrícula
-                </th>
-                <th className="px-4 py-2 min-w-[120px] border border-base-300">
-                  Empresa
-                </th>
-                <th className="px-4 py-2 min-w-[100px] border border-base-300">
-                  Nº Plaza
-                </th>
-                <th className="px-4 py-2 min-w-[160px] border border-base-300">
-                  Fecha Salida
-                </th>
-                <th className="px-4 py-2 min-w-[160px] border border-base-300">
-                  Fecha Entrada
-                </th>
-                <th className="px-4 py-2 min-w-[160px] border border-base-300">
-                  Observaciones
-                </th>
-                <th className="px-4 py-2 min-w-[140px] border border-base-300">
-                  Acciones
-                </th>
-              </tr>
-            </thead>
-
             <tbody className="bg-base-100 divide-y divide-base-700 text-lg font-bold">
               {filas.map((fila, i) => {
-                let matriculaHTML = fila.matricula || "";
-                if (matriculaBuscada && fila.matricula) {
-                  matriculaHTML = resaltarTexto(fila.matricula, matriculaBuscada);
-                }
-                const esResaltado =
-                  coincidencias.length > 0 && coincidencias[indexResaltado] === i;
-
+                const matriculaHTML = fila.matricula
+                  ? resaltarTexto(fila.matricula, matriculaBuscada)
+                  : "";
+                const esResaltado = coincidencias[indexResaltado] === i;
                 return (
                   <tr
                     key={fila.cod_control ?? `nueva-${i}`}
-                    className={`hover:bg-base-300 ${esResaltado ? "bg-yellow-300" : ""}`}
+                    className={`hover:bg-base-300 ${
+                      esResaltado ? "bg-yellow-300" : ""
+                    }`}
                   >
-                    <td className="border border-base-300 px-2 py-2 text-center min-w-[120px]">
+                    <td className="border border-base-300 px-2 py-2 min-w-[120px]">
                       {fila.esNueva ? (
                         <input
                           type="text"
-                          value={fila.matricula || ""}
+                          value={fila.matricula}
                           onChange={(e) =>
                             handleInputChange(i, "matricula", e.target.value.toUpperCase())
                           }
@@ -386,22 +327,23 @@ const ControlVehiculos = () => {
                           autoFocus
                         />
                       ) : (
-                        <span dangerouslySetInnerHTML={{ __html: matriculaHTML }} />
+                        <span
+                          dangerouslySetInnerHTML={{ __html: matriculaHTML }}
+                        />
                       )}
                     </td>
                     <td className="border border-base-300 px-4 py-2 min-w-[220px]">
                       <input
                         type="text"
-                        value={fila.empresa || ""}
+                        value={fila.empresa}
                         disabled
                         className="w-68 px-2 py-1 border border-base-300 rounded bg-base-200 text-base-content text-center"
                       />
                     </td>
-
                     <td className="border border-base-300 px-4 py-2">
                       <input
                         type="number"
-                        value={fila.num_aparcamiento || ""}
+                        value={fila.num_aparcamiento}
                         disabled
                         className="px-2 py-1 border border-base-300 rounded bg-base-200 cursor-not-allowed text-center font-extrabold"
                       />
@@ -409,25 +351,31 @@ const ControlVehiculos = () => {
                     <td className="border border-base-300 px-4 py-2">
                       <input
                         type="datetime-local"
-                        value={fila.fecha_salida || ""}
+                        value={fila.fecha_salida}
                         onClick={() => handleFechaClick(i, "fecha_salida")}
-                        onChange={(e) => handleInputChange(i, "fecha_salida", e.target.value)}
+                        onChange={(e) =>
+                          handleInputChange(i, "fecha_salida", e.target.value)
+                        }
                         className="px-2 py-1 border border-base-400 rounded text-center text-lg"
                       />
                     </td>
                     <td className="border border-base-300 px-4 py-2">
                       <input
                         type="datetime-local"
-                        value={fila.fecha_entrada || ""}
+                        value={fila.fecha_entrada}
                         onClick={() => handleFechaClick(i, "fecha_entrada")}
-                        onChange={(e) => handleInputChange(i, "fecha_entrada", e.target.value)}
+                        onChange={(e) =>
+                          handleInputChange(i, "fecha_entrada", e.target.value)
+                        }
                         className="px-2 py-1 border border-base-400 rounded text-center"
                       />
                     </td>
                     <td className="border border-base-300 px-4 py-2">
                       <textarea
-                        value={fila.observaciones ?? ""}
-                        onChange={(e) => handleInputChange(i, "observaciones", e.target.value)}
+                        value={fila.observaciones}
+                        onChange={(e) =>
+                          handleInputChange(i, "observaciones", e.target.value)
+                        }
                         className="px-2 py-1 border border-base-400 rounded resize-y overflow-auto min-h-[32px]"
                         rows="1"
                       />
@@ -451,20 +399,40 @@ const ControlVehiculos = () => {
                   </tr>
                 );
               })}
-
-              {filas.length === 0 && (
-                <tr>
-                  <td colSpan="7" className="text-center py-4 text-base-content opacity-50">
-                    No hay registros.
-                  </td>
-                </tr>
-              )}
             </tbody>
+
+            <tfoot
+              className="bg-white text-black"
+              style={{ position: "sticky", bottom: 0, zIndex: 10 }}
+            >
+              <tr className="h-1 text-xl">
+                <th className="px-4 py-2 min-w-[100px] border border-base-300">
+                  Matrícula
+                </th>
+                <th className="px-4 py-2 min-w-[120px] border border-base-300">
+                  Empresa
+                </th>
+                <th className="px-4 py-2 min-w-[100px] border border-base-300">
+                  Nº Plaza
+                </th>
+                <th className="px-4 py-2 min-w-[160px] border border-base-300">
+                  Fecha Salida
+                </th>
+                <th className="px-4 py-2 min-w-[160px] border border-base-300">
+                  Fecha Entrada
+                </th>
+                <th className="px-4 py-2 min-w-[160px] border border-base-300">
+                  Observaciones
+                </th>
+                <th className="px-4 py-2 min-w-[140px] border border-base-300">
+                  Acciones
+                </th>
+              </tr>
+            </tfoot>
           </table>
         </div>
       </div>
 
-      {/* Agregamos el Toaster para que funcionen los toasts */}
       <Toaster />
     </div>
   );
