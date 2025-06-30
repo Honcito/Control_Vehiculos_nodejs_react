@@ -65,7 +65,7 @@ const FormularioVehiculos = () => {
     const propietario = propietarios.find(p => p.id_propietario.toString() === selectedId);
     setFormData(prev => ({
       ...prev,
-      propietario: selectedId,
+      id_propietario: selectedId,
       empresa: propietario ? propietario.empresa : "",
       nombre_propietario: propietario ? propietario.nombre : "",
       telefono_propietario: propietario ? propietario.telefono : "",
