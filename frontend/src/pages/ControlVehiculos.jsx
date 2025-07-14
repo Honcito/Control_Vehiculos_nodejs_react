@@ -176,7 +176,7 @@ const ControlVehiculos = () => {
   };
 
   const autocompletarDatos = async (matricula) => {
-    if (!matricula || matricula.length < 6) return null;
+    if (!matricula || matricula.length < 3) return null;
     try {
       const res = await fetch(
         `${API_BASE}/buscar_matricula?matricula=${encodeURIComponent(matricula)}`,
@@ -199,6 +199,7 @@ const ControlVehiculos = () => {
     const fila = filas[index];
     try {
       if (fila.esNueva) {
+        // Crear nuevo registro
         const res = await fetch(API_BASE, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -220,11 +221,32 @@ const ControlVehiculos = () => {
         nuevas[index].cod_control = data.controlId;
         nuevas[index].esNueva = false;
         setFilas([...nuevas, filaVacia()]);
+        toast.success("Registro guardado correctamente.");
+      } else {
+        // Actualizar registro existente
+        const res = await fetch(`${API_BASE}/${fila.cod_control}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify(fila),
+        });
+        if (!res.ok) {
+          const text = await res.text();
+          let errorData;
+          try {
+            errorData = JSON.parse(text);
+          } catch {
+            errorData = {};
+          }
+          throw new Error(errorData.error || "Error al actualizar registro");
+        }
+        toast.success("Registro actualizado correctamente.");
       }
     } catch (e) {
       toast.error("Error: " + e.message);
     }
   };
+  
 
   const borrarFila = async (index) => {
     const fila = filas[index];
