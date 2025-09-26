@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 import "../btnControles.css";
 
 const API_BASE = "http://localhost:3000/api/control_vehiculos";
-const API_EXPORT_PDF = "http://localhost:3000/api/control_vehiculos/exportar_pdf";
+const API_EXPORT_PDF =
+  "http://localhost:3000/api/control_vehiculos/exportar_pdf";
 
 const exportarPDF = () => {
   window.open(API_EXPORT_PDF, "_blank");
@@ -75,26 +76,6 @@ const ControlVehiculos = () => {
   const [indexResaltado, setIndexResaltado] = useState(0);
   const [coincidencias, setCoincidencias] = useState([]);
 
-  useEffect(() => {
-    cargarControles();
-  }, []);
-
-  const cargarControles = async () => {
-    setLoading(true);
-    try {
-      const res = await fetch(API_BASE, { credentials: "include" });
-      if (!res.ok) throw new Error("Error al cargar controles");
-      const data = await res.json();
-      setFilas([...data, filaVacia()]);
-      setCoincidencias([]);
-      setIndexResaltado(0);
-    } catch (e) {
-      setError(e.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const filaVacia = () => ({
     cod_control: null,
     matricula: "",
@@ -108,6 +89,73 @@ const ControlVehiculos = () => {
     esNueva: true,
   });
 
+  /**
+   * @description Carga los controles desde el backend.
+   * Si se usa el filtro de matrícula, usa el endpoint con query param.
+   * Envuelta en useCallback para usarla como dependencia y en el resto de funciones.
+   */
+  const cargarControles = useCallback(
+    async (query) => {
+      setLoading(true);
+      setError(null);
+
+      // Determinar si hay una búsqueda activa
+      const currentQuery = query !== undefined ? query : matriculaBuscada;
+
+      try {
+        const url = `${API_BASE}${
+          currentQuery && currentQuery.length >= 3
+            ? `?matricula=${currentQuery}`
+            : ""
+        }`;
+        const res = await fetch(url, { credentials: "include" });
+
+        if (!res.ok) throw new Error("Error al cargar controles");
+
+        const data = await res.json();
+
+        // Actualiza las filas con los datos frescos del servidor + la fila vacía
+        setFilas([...data, filaVacia()]);
+
+        // Lógica de coincidencias/resaltado solo si hay búsqueda activa
+        if (currentQuery && currentQuery.length >= 3) {
+          const indices = data
+            .map((item, i) =>
+              item.matricula
+                ?.toLowerCase()
+                .startsWith(currentQuery.toLowerCase())
+                ? i
+                : null
+            )
+            .filter((i) => i !== null);
+          setCoincidencias(indices);
+          setIndexResaltado(0);
+        } else {
+          setCoincidencias([]);
+          setIndexResaltado(0);
+        }
+      } catch (e) {
+        setError(e.message);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [matriculaBuscada]
+  ); // Dependencia del estado de búsqueda
+
+  // ----------------------------------------------------
+  // INICIALIZACIÓN Y EFECTOS
+  // ----------------------------------------------------
+
+  useEffect(() => {
+    // Carga inicial de datos
+    cargarControles("");
+  }, [cargarControles]);
+
+  // ----------------------------------------------------
+  // LÓGICA DE BÚSQUEDA
+  // ----------------------------------------------------
+
   const resaltarTexto = (texto, termino) => {
     if (!termino) return texto;
     const regex = new RegExp(`(${termino})`, "gi");
@@ -115,31 +163,8 @@ const ControlVehiculos = () => {
   };
 
   const handleBuscar = async () => {
-    if (!matriculaBuscada || matriculaBuscada.length < 3) {
-      return cargarControles();
-    }
-    setLoading(true);
-    try {
-      const res = await axios.get(API_BASE, {
-        params: { matricula: matriculaBuscada },
-        withCredentials: true,
-      });
-      const data = res.data;
-      setFilas([...data, filaVacia()]);
-      const indices = data
-        .map((item, i) =>
-          item.matricula?.toLowerCase().startsWith(matriculaBuscada.toLowerCase())
-            ? i
-            : null
-        )
-        .filter((i) => i !== null);
-      setCoincidencias(indices);
-      setIndexResaltado(0);
-    } catch {
-      setError("Error al buscar matrícula");
-    } finally {
-      setLoading(false);
-    }
+    // Llama a la versión que respeta el estado de matriculaBuscada
+    cargarControles(matriculaBuscada);
   };
 
   const siguienteResaltado = () => {
@@ -149,9 +174,29 @@ const ControlVehiculos = () => {
 
   const anteriorResaltado = () => {
     if (!coincidencias.length) return;
-    setIndexResaltado((prev) =>
-      (prev - 1 + coincidencias.length) % coincidencias.length
+    setIndexResaltado(
+      (prev) => (prev - 1 + coincidencias.length) % coincidencias.length
     );
+  };
+
+  // ----------------------------------------------------
+  // MANEJO DE INPUTS Y AUTOCOMPLETADO
+  // ----------------------------------------------------
+
+  const autocompletarDatos = async (matricula) => {
+    if (!matricula || matricula.length < 3) return null;
+    try {
+      const res = await fetch(
+        `${API_BASE}/buscar_matricula?matricula=${encodeURIComponent(
+          matricula
+        )}`,
+        { credentials: "include" }
+      );
+      if (!res.ok) return null;
+      return await res.json();
+    } catch {
+      return null;
+    }
   };
 
   const handleInputChange = (index, campo, valor) => {
@@ -175,25 +220,15 @@ const ControlVehiculos = () => {
     }
   };
 
-  const autocompletarDatos = async (matricula) => {
-    if (!matricula || matricula.length < 3) return null;
-    try {
-      const res = await fetch(
-        `${API_BASE}/buscar_matricula?matricula=${encodeURIComponent(matricula)}`,
-        { credentials: "include" }
-      );
-      if (!res.ok) return null;
-      return await res.json();
-    } catch {
-      return null;
-    }
-  };
-
   const handleFechaClick = (index, campo) => {
     const nuevasFilas = [...filas];
     nuevasFilas[index][campo] = ahoraLocalISO();
     setFilas(nuevasFilas);
   };
+
+  // ----------------------------------------------------
+  // ACCIONES CRUD
+  // ----------------------------------------------------
 
   const guardarFila = async (index) => {
     const fila = filas[index];
@@ -216,11 +251,9 @@ const ControlVehiculos = () => {
           }
           throw new Error(errorData.error || "Error al crear registro");
         }
-        const data = JSON.parse(text);
-        const nuevas = [...filas];
-        nuevas[index].cod_control = data.controlId;
-        nuevas[index].esNueva = false;
-        setFilas([...nuevas, filaVacia()]);
+        // ¡IMPORTANTE! Recargar los controles para que el nuevo registro
+        // con fecha_entrada (pero sin fecha_salida) aparezca.
+        await cargarControles();
         toast.success("Registro guardado correctamente.");
       } else {
         // Actualizar registro existente
@@ -240,17 +273,20 @@ const ControlVehiculos = () => {
           }
           throw new Error(errorData.error || "Error al actualizar registro");
         }
+        // ¡IMPORTANTE! Recargar los controles para reflejar el cambio.
+        // Si se añade fecha_salida, el registro debe desaparecer si es anterior a 3 días.
+        await cargarControles();
         toast.success("Registro actualizado correctamente.");
       }
     } catch (e) {
       toast.error("Error: " + e.message);
     }
   };
-  
 
   const borrarFila = async (index) => {
     const fila = filas[index];
     if (fila.esNueva) {
+      // Eliminar la fila vacía local
       return setFilas(filas.filter((_, i) => i !== index));
     }
     const confirm = await confirmarBorrado(
@@ -266,7 +302,8 @@ const ControlVehiculos = () => {
         const err = await res.json();
         throw new Error(err.error || "Error al borrar registro");
       }
-      setFilas(filas.filter((_, i) => i !== index));
+      // ¡IMPORTANTE! Recargar los controles para refrescar la lista.
+      await cargarControles();
       toast.success("Fila eliminada correctamente.");
     } catch (e) {
       toast.error("Error: " + e.message);
@@ -296,8 +333,18 @@ const ControlVehiculos = () => {
               onChange={(e) =>
                 setMatriculaBuscada(e.target.value.toUpperCase())
               }
+              onKeyDown={(e) => {
+                // Agregado para buscar al presionar Enter
+                if (e.key === "Enter") handleBuscar();
+              }}
               className="border px-2 py-1 rounded text-center"
             />
+            <button
+              onClick={handleBuscar}
+              className="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600"
+            >
+              Buscar
+            </button>
           </div>
           {coincidencias.length > 0 && (
             <div className="ml-4 flex items-center space-x-2 text-white">
@@ -324,12 +371,41 @@ const ControlVehiculos = () => {
 
         <div className="overflow-x-auto bg-base-100 rounded-b-lg p-4">
           <table className="table-controles w-full text-center table table-zebra border-collapse border border-base-300">
+            {/* Agregando thead para los encabezados */}
+            <thead>
+              <tr className="h-1 text-xl bg-gray-200 text-black">
+                <th className="px-4 py-2 min-w-[100px] border border-base-300">
+                  Matrícula
+                </th>
+                <th className="px-4 py-2 min-w-[120px] border border-base-300">
+                  Empresa
+                </th>
+                <th className="px-4 py-2 min-w-[100px] border border-base-300">
+                  Nº Plaza
+                </th>
+                <th className="px-4 py-2 min-w-[160px] border border-base-300">
+                  Fecha Salida
+                </th>
+                <th className="px-4 py-2 min-w-[160px] border border-base-300">
+                  Fecha Entrada
+                </th>
+                <th className="px-4 py-2 min-w-[160px] border border-base-300">
+                  Observaciones
+                </th>
+                <th className="px-4 py-2 min-w-[140px] border border-base-300">
+                  Acciones
+                </th>
+              </tr>
+            </thead>
+
             <tbody className="bg-base-100 divide-y divide-base-700 text-lg font-bold">
               {filas.map((fila, i) => {
                 const matriculaHTML = fila.matricula
                   ? resaltarTexto(fila.matricula, matriculaBuscada)
                   : "";
+                // La fila resaltada debe ser la que tiene el índice de coincidencia actual.
                 const esResaltado = coincidencias[indexResaltado] === i;
+
                 return (
                   <tr
                     key={fila.cod_control ?? `nueva-${i}`}
@@ -343,7 +419,11 @@ const ControlVehiculos = () => {
                           type="text"
                           value={fila.matricula}
                           onChange={(e) =>
-                            handleInputChange(i, "matricula", e.target.value.toUpperCase())
+                            handleInputChange(
+                              i,
+                              "matricula",
+                              e.target.value.toUpperCase()
+                            )
                           }
                           className="w-24 px-2 py-1 border border-base-300 rounded text-center"
                           autoFocus
@@ -374,6 +454,7 @@ const ControlVehiculos = () => {
                       <input
                         type="datetime-local"
                         value={fila.fecha_salida}
+                        // La acción de click ahora es un "atajo" para poner la hora actual
                         onClick={() => handleFechaClick(i, "fecha_salida")}
                         onChange={(e) =>
                           handleInputChange(i, "fecha_salida", e.target.value)
@@ -385,6 +466,7 @@ const ControlVehiculos = () => {
                       <input
                         type="datetime-local"
                         value={fila.fecha_entrada}
+                        // La acción de click ahora es un "atajo" para poner la hora actual
                         onClick={() => handleFechaClick(i, "fecha_entrada")}
                         onChange={(e) =>
                           handleInputChange(i, "fecha_entrada", e.target.value)
@@ -409,20 +491,19 @@ const ControlVehiculos = () => {
                       >
                         {fila.esNueva ? "Guardar" : "Actualizar"}
                       </button>
-                      {!fila.esNueva && (
-                        <button
-                          onClick={() => borrarFila(i)}
-                          className="btn-delete px-3 py-1 rounded bg-red-600 text-white hover:bg-red-700"
-                        >
-                          Borrar
-                        </button>
-                      )}
+                      <button
+                        onClick={() => borrarFila(i)}
+                        className="btn-delete px-3 py-1 rounded bg-red-600 text-white hover:bg-red-700"
+                      >
+                        Borrar
+                      </button>
                     </td>
                   </tr>
                 );
               })}
             </tbody>
 
+            {/* El footer se mantiene igual para los encabezados fijos */}
             <tfoot
               className="bg-white text-black"
               style={{ position: "sticky", bottom: 0, zIndex: 10 }}

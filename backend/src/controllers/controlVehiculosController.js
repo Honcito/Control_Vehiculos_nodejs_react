@@ -1,31 +1,46 @@
 import { getDB } from "../config/db.js";
 import PDFDocument from 'pdfkit'
 
-// GET ALL CONTROL VEHICULOS - últimos 2 días ordenados DESC
+// GET ALL CONTROL VEHICULOS - Filtrado estricto + Ordenación por ID de creación (cod_control).
 export const getControl = (req, res) => {
-  const db = getDB();
-  const { matricula } = req.query;
+    const db = getDB();
+    const { matricula } = req.query;
 
-  let query = `
-  SELECT c.*, v.num_aparcamiento 
-  FROM control_vehiculos c
-  LEFT JOIN vehiculos v ON c.cod_vehiculo = v.cod_vehiculo
-  WHERE datetime(c.fecha_salida) >= datetime('now', '-2 days')
-  `;
+    let query = `
+    SELECT c.*, v.num_aparcamiento 
+    FROM control_vehiculos c
+    LEFT JOIN vehiculos v ON c.cod_vehiculo = v.cod_vehiculo
+    
+    -- 🚨 CLÁUSULA WHERE DEFINITIVA: 
+    -- Se incluyen solo si cumplen una de estas dos condiciones:
+    WHERE 
+        -- CONDICIÓN 1: El vehículo está ACTIVO (fecha_salida es NULL/vacío) Y su entrada es RECIENTE (últimos 30 días, para eliminar el historial de meses pasados).
+        ((c.fecha_salida IS NULL OR c.fecha_salida = '')
+        AND (c.fecha_entrada IS NOT NULL AND c.fecha_entrada != '' AND datetime(c.fecha_entrada) >= datetime('now', '-30 days')))
+        
+        OR 
+        
+        -- CONDICIÓN 2: El vehículo está CERRADO (tiene fecha de salida) Y es RECIENTE (últimos 2 días).
+        (
+            c.fecha_salida IS NOT NULL AND c.fecha_salida != '' 
+            AND datetime(c.fecha_salida) >= datetime('now', '-2 days')
+        )
+    `;
 
-  const params = [];
+    const params = [];
 
-  if (matricula && matricula.length >= 3) {
-    query += ` AND matricula LIKE ?`;
-    params.push(matricula + "%");
-  }
+    if (matricula && matricula.length >= 3) {
+        query += ` AND c.matricula LIKE ?`;
+        params.push(matricula + "%");
+    }
+    
+    // 🚨 CLÁUSULA ORDER BY FINAL: Ordena estrictamente por el ID de creación (orden de inclusión).
+    query += ` ORDER BY c.cod_control ASC`;
 
-  query += ` ORDER BY datetime(fecha_salida)`;
-
-  db.all(query, params, (err, rows) => {
-    if (err) return res.status(500).json({ error: err.message });
-    res.json(rows);
-  });
+    db.all(query, params, (err, rows) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json(rows);
+    });
 };
 
 
