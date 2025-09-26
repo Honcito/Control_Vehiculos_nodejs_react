@@ -11,12 +11,11 @@ export const getControl = (req, res) => {
     FROM control_vehiculos c
     LEFT JOIN vehiculos v ON c.cod_vehiculo = v.cod_vehiculo
     
-    -- 🚨 CLÁUSULA WHERE DEFINITIVA: 
     -- Se incluyen solo si cumplen una de estas dos condiciones:
     WHERE 
         -- CONDICIÓN 1: El vehículo está ACTIVO (fecha_salida es NULL/vacío) Y su entrada es RECIENTE (últimos 30 días, para eliminar el historial de meses pasados).
         ((c.fecha_salida IS NULL OR c.fecha_salida = '')
-        AND (c.fecha_entrada IS NOT NULL AND c.fecha_entrada != '' AND datetime(c.fecha_entrada) >= datetime('now', '-30 days')))
+        AND (c.fecha_entrada IS NOT NULL AND c.fecha_entrada != '' AND datetime(c.fecha_entrada) >= datetime('now', '-3 days')))
         
         OR 
         
@@ -34,7 +33,7 @@ export const getControl = (req, res) => {
         params.push(matricula + "%");
     }
     
-    // 🚨 CLÁUSULA ORDER BY FINAL: Ordena estrictamente por el ID de creación (orden de inclusión).
+    //  CLÁUSULA ORDER BY FINAL: Ordena estrictamente por el ID de creación (orden de inclusión).
     query += ` ORDER BY c.cod_control ASC`;
 
     db.all(query, params, (err, rows) => {
