@@ -23,18 +23,24 @@ const HomePage = () => {
     <div className="min-h-screen bg-base-100 text-base-content px-4 py-12 md:px-12 flex justify-center">
       <div className="w-full max-w-5xl space-y-10">
 
-        {/* Header con saludo centrado */}
-        <div className="text-center" style={{ marginBottom: "32px" }}>
-          <h1 className="text-3xl md:text-4xl font-extrabold text-emerald-400 tracking-tight" style={{ marginBottom: "12px" }}>
+        {/* Header con saludo completamente centrado */}
+        <div style={{ textAlign: "center", width: "100%", marginBottom: "32px" }}>
+          <h1
+            className="text-3xl md:text-4xl font-extrabold text-emerald-400 tracking-tight"
+            style={{ textAlign: "center", marginBottom: "12px" }}
+          >
             Hola {user ? user.nombre : "USUARIO"}
           </h1>
-          <p className="text-base md:text-lg text-base-content/70 max-w-2xl mx-auto">
+          <p
+            className="text-base md:text-lg text-base-content/70"
+            style={{ textAlign: "center", width: "100%", margin: "0 auto" }}
+          >
             Bienvenido al sistema de gestión y control de acceso de vehículos.
           </p>
         </div>
 
         {/* Guía Práctica de Ancho Completo */}
-        <section 
+        <section
           className="bg-base-200/50 border border-base-300 rounded-2xl shadow-xl"
           style={{ padding: "32px 28px", marginBottom: "32px" }}
         >
@@ -42,7 +48,7 @@ const HomePage = () => {
             Guía Práctica del Control de Vehículos
           </h2>
 
-          <div 
+          <div
             className="w-full bg-base-200 rounded-xl border border-base-300/80 shadow-md text-center"
             style={{ padding: "28px 24px", display: "flex", flexDirection: "column", gap: "16px", alignItems: "center" }}
           >
@@ -51,7 +57,7 @@ const HomePage = () => {
                 1. Matrícula y Datos
               </span>
             </div>
-            
+
             <p className="text-sm md:text-base text-base-content/80 leading-relaxed max-w-2xl mx-auto">
               Escribe 3 letras o números para autocompletar la empresa y plaza asignada.
             </p>
@@ -80,7 +86,7 @@ const HomePage = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
 
           {/* Instrucciones Usuarios */}
-          <div 
+          <div
             className="bg-base-200/50 border border-base-300 rounded-2xl shadow-xl"
             style={{ padding: "32px 28px" }}
           >
@@ -116,7 +122,7 @@ const HomePage = () => {
           </div>
 
           {/* Instrucciones Administradores */}
-          <div 
+          <div
             className="bg-base-200/50 border border-base-300 rounded-2xl shadow-xl"
             style={{ padding: "32px 28px" }}
           >
