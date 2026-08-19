@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import toast from "react-hot-toast";
 import api from "../lib/axios";
-import "../btn.css";
 
 const Login = () => {
   const [nombre, setNombre] = useState("");
@@ -30,21 +29,22 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-base-100 px-4 py-8 text-base-content">
-      <section className="w-full max-w-md bg-base-200 rounded-xl shadow-2xl p-8 border border-base-300 space-y-6">
+    <div className="min-h-screen w-full flex items-center justify-center bg-base-100 px-4 py-12 text-base-content">
+      <section className="w-full max-w-md bg-base-200 rounded-2xl shadow-2xl p-8 md:p-10 border border-base-300 space-y-8">
+        
         {/* Encabezado */}
-        <div className="text-center space-y-2">
-          <h2 className="text-3xl font-extrabold text-base-content">
+        <div className="text-center space-y-3">
+          <h2 className="text-3xl md:text-4xl font-extrabold text-base-content tracking-tight">
             Control de Vehículos
           </h2>
-          <p className="text-sm text-base-content/70">
+          <p className="text-sm md:text-base text-base-content/70">
             Ingresa tus credenciales para acceder
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-5">
+        <form onSubmit={handleSubmit} className="space-y-6">
           {/* Campo Usuario */}
-          <div className="flex flex-col text-left space-y-1.5">
+          <div className="flex flex-col text-left space-y-2">
             <label className="text-sm font-semibold text-base-content">
               Nombre de usuario:
             </label>
@@ -54,12 +54,12 @@ const Login = () => {
               onChange={(e) => setNombre(e.target.value)}
               required
               placeholder="Tu usuario"
-              className="w-full h-11 px-4 text-base bg-white border border-gray-300 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all shadow-sm"
+              className="w-full h-12 px-4 text-base bg-white border border-gray-300 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all shadow-sm"
             />
           </div>
 
           {/* Campo Contraseña */}
-          <div className="flex flex-col text-left space-y-1.5">
+          <div className="flex flex-col text-left space-y-2">
             <label className="text-sm font-semibold text-base-content">
               Contraseña:
             </label>
@@ -69,16 +69,16 @@ const Login = () => {
               onChange={(e) => setPassword(e.target.value)}
               required
               placeholder="••••••••"
-              className="w-full h-11 px-4 text-base bg-white border border-gray-300 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all shadow-sm"
+              className="w-full h-12 px-4 text-base bg-white border border-gray-300 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all shadow-sm"
             />
           </div>
 
-          {/* Botón Login */}
+          {/* Botón Login - Perfectamente Alineado */}
           <div className="pt-2">
             <button
               type="submit"
               disabled={loading}
-              className="btn-login w-full h-11 disabled:opacity-50 text-base font-bold rounded-lg transition-all"
+              className="w-full h-12 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold text-base rounded-xl transition-all shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
             >
               {loading ? "Iniciando sesión..." : "Iniciar sesión"}
             </button>
