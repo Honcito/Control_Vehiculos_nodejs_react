@@ -27,4 +27,7 @@ Thumbs.db
 frontend/node_modules/
 frontend/build/
 
-.txt
+*.txt
+*.exe
+*.bat
+*.db
