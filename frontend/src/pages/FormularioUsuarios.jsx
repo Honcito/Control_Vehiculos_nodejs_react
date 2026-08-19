@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import toast from "react-hot-toast";
 import api from "../lib/axios"; // Instancia de Axios centralizada
+import "../btnControles.css";
 
 const FormularioUsuarios = () => {
   const navigate = useNavigate();
@@ -59,10 +60,10 @@ const FormularioUsuarios = () => {
   };
 
   return (
-    <div className="min-h-dvh flex items-center justify-center bg-gray-800 px-4 py-8 text-white">
-      <section className="w-full max-w-md bg-gray-900 rounded-lg shadow-xl border border-gray-700 p-8">
+    <div className="min-h-dvh flex items-center justify-center bg-base-100 px-4 py-8 text-base-content">
+      <section className="w-full max-w-md bg-base-200 rounded-lg shadow-xl border border-base-300 p-8">
         <div className="text-center mb-6">
-          <h2 className="text-2xl font-bold text-white">
+          <h2 className="text-2xl font-bold">
             {id ? "Editar Usuario" : "Nuevo Usuario"}
           </h2>
         </div>
@@ -70,7 +71,7 @@ const FormularioUsuarios = () => {
         <form onSubmit={handleSubmit} className="space-y-5">
           {/* Nombre */}
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-300">
+            <label className="block text-sm font-medium text-base-content/80">
               Nombre
             </label>
             <input
@@ -79,14 +80,14 @@ const FormularioUsuarios = () => {
               placeholder="Nombre del usuario"
               value={formData.nombre}
               onChange={handleChange}
-              className="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded-md text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 bg-base-100 border border-base-300 rounded-md text-base-content text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             />
           </div>
 
           {/* Contraseña */}
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-300">
+            <label className="block text-sm font-medium text-base-content/80">
               Contraseña
             </label>
             <input
@@ -95,14 +96,14 @@ const FormularioUsuarios = () => {
               placeholder={id ? "Dejar en blanco para no cambiar" : "Contraseña"}
               value={formData.password}
               onChange={handleChange}
-              className="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded-md text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 bg-base-100 border border-base-300 rounded-md text-base-content text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               required={!id}
             />
           </div>
 
           {/* Teléfono */}
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-300">
+            <label className="block text-sm font-medium text-base-content/80">
               Teléfono
             </label>
             <input
@@ -111,20 +112,20 @@ const FormularioUsuarios = () => {
               placeholder="Número de teléfono"
               value={formData.telefono}
               onChange={handleChange}
-              className="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded-md text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 bg-base-100 border border-base-300 rounded-md text-base-content text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
 
           {/* Rol */}
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-300">
+            <label className="block text-sm font-medium text-base-content/80">
               Rol
             </label>
             <select
               name="rol"
               value={formData.rol}
               onChange={handleChange}
-              className="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded-md text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 bg-base-100 border border-base-300 rounded-md text-base-content text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             >
               <option value="">Selecciona un rol</option>
@@ -134,18 +135,18 @@ const FormularioUsuarios = () => {
           </div>
 
           {/* Botones */}
-          <div className="flex items-center justify-end space-x-3 pt-4 border-t border-gray-700">
+          <div className="flex items-center justify-end space-x-3 pt-4 border-t border-base-300">
             <button
               type="button"
               onClick={() => navigate("/usuarios")}
-              className="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-gray-200 text-sm font-semibold rounded-md transition-colors"
+              className="px-4 py-2 bg-base-300 hover:bg-base-100 text-base-content text-sm font-semibold rounded-md transition-colors"
             >
               Volver
             </button>
 
             <button
               type="submit"
-              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-md transition-colors"
+              className={id ? "btn-update" : "btn-add"}
             >
               {id ? "Actualizar" : "Crear"}
             </button>

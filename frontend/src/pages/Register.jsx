@@ -40,21 +40,21 @@ const Register = () => {
       toast.error(
         err.response?.data?.message || "Error al registrar el usuario"
       );
-    } finally {
+    } font-semibold
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-gray-800 px-4 py-8">
-      <section className="w-full max-w-md bg-gray-900 rounded-lg shadow-xl p-8 border border-gray-700 space-y-6">
+    <div className="min-h-screen w-full flex items-center justify-center bg-base-100 px-4 py-8 text-base-content">
+      <section className="w-full max-w-md bg-base-200 rounded-lg shadow-xl p-8 border border-base-300 space-y-6">
         
         {/* Encabezado */}
         <div className="text-center space-y-2">
-          <h2 className="text-3xl font-bold text-white">
+          <h2 className="text-3xl font-bold text-base-content">
             Registro de Empleados
           </h2>
-          <p className="text-sm text-gray-400">
+          <p className="text-sm text-base-content/70">
             Crea una cuenta para acceder al sistema
           </p>
         </div>
@@ -62,8 +62,8 @@ const Register = () => {
         <form onSubmit={handleSubmit} className="space-y-5">
           {/* Campo Nombre */}
           <div className="flex flex-col text-left space-y-1.5">
-            <label className="text-sm font-medium text-white">
-              Nombre de usuario <span className="text-red-500">*</span>
+            <label className="text-sm font-medium text-base-content">
+              Nombre de usuario <span className="text-error">*</span>
             </label>
             <input
               type="text"
@@ -72,14 +72,14 @@ const Register = () => {
               onChange={handleChange}
               required
               placeholder="Ej: juanperez"
-              className="w-full h-11 px-4 text-base bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 border border-gray-300 rounded text-gray-800"
+              className="w-full h-11 px-4 text-base bg-base-100 border border-base-300 rounded text-base-content placeholder-base-content/40 focus:outline-none focus:ring-2 focus:ring-primary"
             />
           </div>
 
           {/* Campo Contraseña */}
           <div className="flex flex-col text-left space-y-1.5">
-            <label className="text-sm font-medium text-white">
-              Contraseña <span className="text-red-500">*</span>
+            <label className="text-sm font-medium text-base-content">
+              Contraseña <span className="text-error">*</span>
             </label>
             <input
               type="password"
@@ -88,14 +88,14 @@ const Register = () => {
               onChange={handleChange}
               required
               placeholder="••••••••"
-              className="w-full h-11 px-4 text-base bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 border border-gray-300 rounded text-gray-800"
+              className="w-full h-11 px-4 text-base bg-base-100 border border-base-300 rounded text-base-content placeholder-base-content/40 focus:outline-none focus:ring-2 focus:ring-primary"
             />
           </div>
 
           {/* Campo Teléfono */}
           <div className="flex flex-col text-left space-y-1.5">
-            <label className="text-sm font-medium text-white">
-              Teléfono <span className="text-gray-400 text-xs">(Opcional)</span>
+            <label className="text-sm font-medium text-base-content">
+              Teléfono <span className="text-base-content/50 text-xs">(Opcional)</span>
             </label>
             <input
               type="tel"
@@ -103,7 +103,7 @@ const Register = () => {
               value={formData.telefono}
               onChange={handleChange}
               placeholder="Ej: 600123456"
-              className="w-full h-11 px-4 text-base bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 border border-gray-300 rounded text-gray-800"
+              className="w-full h-11 px-4 text-base bg-base-100 border border-base-300 rounded text-base-content placeholder-base-content/40 focus:outline-none focus:ring-2 focus:ring-primary"
             />
           </div>
 
@@ -122,7 +122,7 @@ const Register = () => {
           <div className="text-center pt-2">
             <Link
               to="/login"
-              className="text-sm text-blue-400 hover:text-blue-300 hover:underline transition-colors"
+              className="text-sm text-primary hover:underline transition-colors"
             >
               ¿Ya tienes cuenta? Inicia sesión aquí
             </Link>

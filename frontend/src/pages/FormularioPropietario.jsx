@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import toast from "react-hot-toast";
 import api from "../lib/axios"; // Instancia de Axios centralizada
+import "../btnControles.css";
 
 const FormularioPropietario = () => {
   const navigate = useNavigate();
@@ -49,17 +50,17 @@ const FormularioPropietario = () => {
 
     const toastId = toast(
       (t) => (
-        <div className="bg-gray-800 text-white p-4 rounded shadow space-y-4 max-w-xs border border-gray-700">
+        <div className="bg-base-200 text-base-content p-4 rounded shadow space-y-4 max-w-xs border border-base-300">
           <p className="text-sm">¿Seguro que quieres eliminar este propietario?</p>
           <div className="flex justify-end space-x-2">
             <button
-              className="bg-gray-600 px-3 py-1 text-sm rounded hover:bg-gray-700 transition-colors"
+              className="px-3 py-1 text-sm rounded bg-base-300 hover:bg-base-100 transition-colors"
               onClick={() => toast.dismiss(toastId)}
             >
               Cancelar
             </button>
             <button
-              className="bg-red-600 px-3 py-1 text-sm rounded hover:bg-red-700 transition-colors"
+              className="btn-delete"
               onClick={async () => {
                 toast.loading("Eliminando...", { id: toastId });
                 try {
@@ -86,10 +87,10 @@ const FormularioPropietario = () => {
   };
 
   return (
-    <div className="min-h-dvh flex items-center justify-center bg-gray-800 px-4 py-8 text-white">
-      <section className="w-full max-w-md bg-gray-900 rounded-lg shadow-xl border border-gray-700 p-8">
+    <div className="min-h-dvh flex items-center justify-center bg-base-100 px-4 py-8 text-base-content">
+      <section className="w-full max-w-md bg-base-200 rounded-lg shadow-xl border border-base-300 p-8">
         <div className="text-center mb-6">
-          <h2 className="text-2xl font-bold text-white">
+          <h2 className="text-2xl font-bold">
             {id ? "Editar Propietario" : "Nuevo Propietario"}
           </h2>
         </div>
@@ -97,7 +98,7 @@ const FormularioPropietario = () => {
         <form onSubmit={handleSubmit} className="space-y-5">
           {/* Empresa */}
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-300">
+            <label className="block text-sm font-medium text-base-content/80">
               Empresa
             </label>
             <input
@@ -106,14 +107,14 @@ const FormularioPropietario = () => {
               placeholder="Nombre de la empresa"
               value={formData.empresa}
               onChange={handleChange}
-              className="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded-md text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 bg-base-100 border border-base-300 rounded-md text-base-content text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             />
           </div>
 
           {/* Nombre */}
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-300">
+            <label className="block text-sm font-medium text-base-content/80">
               Nombre
             </label>
             <input
@@ -122,14 +123,14 @@ const FormularioPropietario = () => {
               placeholder="Nombre de contacto"
               value={formData.nombre}
               onChange={handleChange}
-              className="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded-md text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 bg-base-100 border border-base-300 rounded-md text-base-content text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             />
           </div>
 
           {/* Nº plazas */}
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-300">
+            <label className="block text-sm font-medium text-base-content/80">
               Nº de plazas
             </label>
             <input
@@ -138,14 +139,14 @@ const FormularioPropietario = () => {
               placeholder="Nº de plazas alquiladas"
               value={formData.num_plazas || ""}
               onChange={handleChange}
-              className="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded-md text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 bg-base-100 border border-base-300 rounded-md text-base-content text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             />
           </div>
 
           {/* Teléfono/s */}
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-300">
+            <label className="block text-sm font-medium text-base-content/80">
               Teléfono/s
             </label>
             <input
@@ -154,16 +155,16 @@ const FormularioPropietario = () => {
               placeholder="Número de teléfono"
               value={formData.telefono}
               onChange={handleChange}
-              className="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded-md text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 bg-base-100 border border-base-300 rounded-md text-base-content text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
 
           {/* Botones */}
-          <div className="flex items-center justify-end space-x-3 pt-4 border-t border-gray-700">
+          <div className="flex items-center justify-end space-x-3 pt-4 border-t border-base-300">
             <button
               type="button"
               onClick={() => navigate("/propietarios")}
-              className="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-gray-200 text-sm font-semibold rounded-md transition-colors"
+              className="px-4 py-2 bg-base-300 hover:bg-base-100 text-base-content text-sm font-semibold rounded-md transition-colors"
             >
               Volver
             </button>
@@ -172,7 +173,7 @@ const FormularioPropietario = () => {
               <button
                 type="button"
                 onClick={handleDelete}
-                className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-semibold rounded-md transition-colors"
+                className="btn-delete"
               >
                 Eliminar
               </button>
@@ -180,7 +181,7 @@ const FormularioPropietario = () => {
 
             <button
               type="submit"
-              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-md transition-colors"
+              className={id ? "btn-update" : "btn-add"}
             >
               {id ? "Actualizar" : "Crear"}
             </button>

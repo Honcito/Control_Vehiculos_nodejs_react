@@ -47,11 +47,11 @@ const Propietarios = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-800 text-white px-8 py-6">
-      <div className="bg-gray-900 rounded-lg shadow-xl p-6 border border-gray-700 space-y-6">
+    <div className="min-h-screen bg-base-100 text-base-content px-8 py-6">
+      <div className="bg-base-200 rounded-lg shadow-xl p-6 border border-base-300 space-y-6">
         {/* Encabezado */}
-        <div className="flex items-center justify-between px-4 py-2 border-b border-gray-700 pb-4">
-          <h2 className="text-3xl font-bold text-white">
+        <div className="flex items-center justify-between px-4 py-2 border-b border-base-300 pb-4">
+          <h2 className="text-3xl font-bold text-base-content">
             Lista de Propietarios
           </h2>
           <button
@@ -63,9 +63,9 @@ const Propietarios = () => {
         </div>
 
         {/* Tabla */}
-        <div className="overflow-x-auto rounded-lg border border-gray-700">
-          <table className="w-full text-center divide-y divide-gray-700">
-            <thead className="bg-gray-800 text-gray-200 capitalize sticky top-0 z-10">
+        <div className="overflow-x-auto rounded-lg border border-base-300">
+          <table className="w-full text-center divide-y divide-base-300">
+            <thead className="bg-base-300 text-base-content capitalize sticky top-0 z-10">
               <tr className="h-12 text-sm md:text-base font-semibold">
                 <th className="px-4 py-3 min-w-[80px]">ID</th>
                 <th className="px-4 py-3 min-w-[120px]">Empresa</th>
@@ -75,16 +75,16 @@ const Propietarios = () => {
                 <th className="px-4 py-3 min-w-[150px]">Acciones</th>
               </tr>
             </thead>
-            <tbody className="bg-gray-900 divide-y divide-gray-800 text-sm md:text-base font-medium">
+            <tbody className="bg-base-200 divide-y divide-base-300 text-sm md:text-base font-medium">
               {loading ? (
                 <tr>
-                  <td colSpan="6" className="text-center py-6 text-gray-400">
+                  <td colSpan="6" className="text-center py-6 text-base-content/60">
                     Cargando propietarios...
                   </td>
                 </tr>
               ) : propietarios.length === 0 ? (
                 <tr>
-                  <td colSpan="6" className="text-center py-6 text-gray-400">
+                  <td colSpan="6" className="text-center py-6 text-base-content/60">
                     No hay propietarios registrados.
                   </td>
                 </tr>
@@ -92,7 +92,7 @@ const Propietarios = () => {
                 propietarios.map((prop) => (
                   <tr
                     key={prop.id_propietario}
-                    className="hover:bg-gray-800/60 transition-colors"
+                    className="hover:bg-base-300/50 transition-colors"
                   >
                     <td className="px-4 py-3">{prop.id_propietario}</td>
                     <td className="px-4 py-3">{prop.empresa || "-"}</td>

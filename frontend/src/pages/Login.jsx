@@ -34,25 +34,25 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-gray-800 px-4 py-8">
-      <section className="w-full max-w-md bg-gray-900 rounded-lg shadow-xl p-8 border border-gray-700 space-y-6">
+    <div className="min-h-screen w-full flex items-center justify-center bg-base-100 px-4 py-8 text-base-content">
+      <section className="w-full max-w-md bg-base-200 rounded-lg shadow-xl p-8 border border-base-300 space-y-6">
         
         {/* Encabezado */}
         <div className="text-center space-y-2">
-          <h2 className="text-3xl font-bold text-white">
+          <h2 className="text-3xl font-bold text-base-content">
             Control de Vehículos
           </h2>
-          <p className="text-sm text-gray-400">Ingresa tus credenciales</p>
+          <p className="text-sm text-base-content/70">Ingresa tus credenciales</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-5">
           {/* Campo Nombre */}
           <div className="flex flex-col text-left space-y-1.5">
-            <label className="text-sm font-medium text-white">
+            <label className="text-sm font-medium text-base-content">
               Nombre:
             </label>
             <input
-              className="w-full h-11 px-4 text-base bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 border border-gray-300 rounded text-gray-800"
+              className="w-full h-11 px-4 text-base bg-base-100 border border-base-300 rounded text-base-content placeholder-base-content/40 focus:outline-none focus:ring-2 focus:ring-primary"
               type="text"
               value={nombre}
               onChange={(e) => setNombre(e.target.value)}
@@ -64,11 +64,11 @@ const Login = () => {
 
           {/* Campo Contraseña */}
           <div className="flex flex-col text-left space-y-1.5">
-            <label className="text-sm font-medium text-white">
+            <label className="text-sm font-medium text-base-content">
               Contraseña:
             </label>
             <input
-              className="w-full h-11 px-4 text-base bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 border border-gray-300 rounded text-gray-800"
+              className="w-full h-11 px-4 text-base bg-base-100 border border-base-300 rounded text-base-content placeholder-base-content/40 focus:outline-none focus:ring-2 focus:ring-primary"
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -93,7 +93,7 @@ const Login = () => {
           <div className="text-center pt-2">
             <Link
               to="/register"
-              className="text-sm text-blue-400 hover:text-blue-300 hover:underline transition-colors"
+              className="text-sm text-primary hover:underline transition-colors"
             >
               ¿No tienes cuenta? Regístrate aquí
             </Link>

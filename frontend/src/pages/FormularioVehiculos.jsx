@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import toast from "react-hot-toast";
 import api from "../lib/axios"; // Instancia centralizada de Axios
+import "../btnControles.css";
 
 const FormularioVehiculos = () => {
   const navigate = useNavigate();
@@ -102,10 +103,10 @@ const FormularioVehiculos = () => {
   };
 
   return (
-    <div className="min-h-dvh flex items-center justify-center bg-gray-800 px-4 py-8 text-white">
-      <section className="w-full max-w-md bg-gray-900 rounded-lg shadow-xl border border-gray-700 p-8">
+    <div className="min-h-dvh flex items-center justify-center bg-base-100 px-4 py-8 text-base-content">
+      <section className="w-full max-w-md bg-base-200 rounded-lg shadow-xl border border-base-300 p-8">
         <div className="text-center mb-6">
-          <h2 className="text-2xl font-bold text-white">
+          <h2 className="text-2xl font-bold">
             {id ? "Editar Vehículo" : "Nuevo Vehículo"}
           </h2>
         </div>
@@ -113,7 +114,7 @@ const FormularioVehiculos = () => {
         <form onSubmit={handleSubmit} className="space-y-5">
           {/* Matrícula */}
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-300">
+            <label className="block text-sm font-medium text-base-content/80">
               Matrícula
             </label>
             <input
@@ -122,14 +123,14 @@ const FormularioVehiculos = () => {
               placeholder="Matrícula del vehículo"
               value={formData.matricula}
               onChange={handleChange}
-              className="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded-md text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 bg-base-100 border border-base-300 rounded-md text-base-content text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             />
           </div>
 
           {/* Número Aparcamiento */}
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-300">
+            <label className="block text-sm font-medium text-base-content/80">
               Número de aparcamiento
             </label>
             <input
@@ -138,7 +139,7 @@ const FormularioVehiculos = () => {
               placeholder="Nº de plaza o aparcamiento"
               value={formData.num_aparcamiento}
               onChange={handleChange}
-              className="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded-md text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 bg-base-100 border border-base-300 rounded-md text-base-content text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
               min={0}
             />
@@ -146,7 +147,7 @@ const FormularioVehiculos = () => {
 
           {/* Observaciones */}
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-300">
+            <label className="block text-sm font-medium text-base-content/80">
               Observaciones
             </label>
             <input
@@ -155,20 +156,20 @@ const FormularioVehiculos = () => {
               placeholder="Observaciones adicionales"
               value={formData.observaciones}
               onChange={handleChange}
-              className="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded-md text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 bg-base-100 border border-base-300 rounded-md text-base-content text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
 
           {/* Empresa (select) */}
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-300">
+            <label className="block text-sm font-medium text-base-content/80">
               Empresa
             </label>
             <select
               name="id_propietario"
               value={formData.id_propietario}
               onChange={handleEmpresaChange}
-              className="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded-md text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 bg-base-100 border border-base-300 rounded-md text-base-content text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             >
               <option value="">Selecciona una empresa</option>
@@ -182,7 +183,7 @@ const FormularioVehiculos = () => {
 
           {/* Nombre propietario (autocompletado, readonly) */}
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-300">
+            <label className="block text-sm font-medium text-base-content/80">
               Nombre del propietario
             </label>
             <input
@@ -191,13 +192,13 @@ const FormularioVehiculos = () => {
               placeholder="Nombre propietario"
               value={formData.nombre_propietario}
               readOnly
-              className="w-full px-3 py-2 bg-gray-700/50 border border-gray-600/50 rounded-md text-gray-400 text-sm cursor-not-allowed"
+              className="w-full px-3 py-2 bg-base-300/50 border border-base-300 rounded-md text-base-content/50 text-sm cursor-not-allowed"
             />
           </div>
 
           {/* Teléfono propietario (autocompletado, readonly) */}
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-300">
+            <label className="block text-sm font-medium text-base-content/80">
               Teléfono del propietario
             </label>
             <input
@@ -206,23 +207,23 @@ const FormularioVehiculos = () => {
               placeholder="Teléfono propietario"
               value={formData.telefono_propietario}
               readOnly
-              className="w-full px-3 py-2 bg-gray-700/50 border border-gray-600/50 rounded-md text-gray-400 text-sm cursor-not-allowed"
+              className="w-full px-3 py-2 bg-base-300/50 border border-base-300 rounded-md text-base-content/50 text-sm cursor-not-allowed"
             />
           </div>
 
           {/* Botones */}
-          <div className="flex items-center justify-end space-x-3 pt-4 border-t border-gray-700">
+          <div className="flex items-center justify-end space-x-3 pt-4 border-t border-base-300">
             <button
               type="button"
               onClick={() => navigate("/vehiculos")}
-              className="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-gray-200 text-sm font-semibold rounded-md transition-colors"
+              className="px-4 py-2 bg-base-300 hover:bg-base-100 text-base-content text-sm font-semibold rounded-md transition-colors"
             >
               Volver
             </button>
 
             <button
               type="submit"
-              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-md transition-colors"
+              className={id ? "btn-update" : "btn-add"}
             >
               {id ? "Actualizar" : "Crear"}
             </button>
