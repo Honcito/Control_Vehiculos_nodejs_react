@@ -1,14 +1,13 @@
 import React, { useEffect, useState, useCallback } from "react";
-import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
+import api from "../api/api"; // Instancia de Axios centralizada con VITE_API_URL
 import "../btnControles.css";
 
-const API_BASE = "http://localhost:3000/api/control_vehiculos";
-const API_EXPORT_PDF =
-  "http://localhost:3000/api/control_vehiculos/exportar_pdf";
+// Obtiene la base URL del entorno
+const API_BASE_URL = import.meta.env.VITE_API_URL || "https://hong.sytes.net/api-vehiculos";
 
 const exportarPDF = () => {
-  window.open(API_EXPORT_PDF, "_blank");
+  window.open(`${API_BASE_URL}/api/control_vehiculos/exportar_pdf`, "_blank");
 };
 
 function ahoraLocalISO() {
@@ -89,35 +88,26 @@ const ControlVehiculos = () => {
     esNueva: true,
   });
 
-  /**
-   * @description Carga los controles desde el backend.
-   * Si se usa el filtro de matrícula, usa el endpoint con query param.
-   * Envuelta en useCallback para usarla como dependencia y en el resto de funciones.
-   */
   const cargarControles = useCallback(
     async (query) => {
       setLoading(true);
       setError(null);
 
-      // Determinar si hay una búsqueda activa
       const currentQuery = query !== undefined ? query : matriculaBuscada;
 
       try {
-        const url = `${API_BASE}${
+        const endpoint = `/api/control_vehiculos${
           currentQuery && currentQuery.length >= 3
-            ? `?matricula=${currentQuery}`
+            ? `?matricula=${encodeURIComponent(currentQuery)}`
             : ""
         }`;
-        const res = await fetch(url, { credentials: "include" });
 
-        if (!res.ok) throw new Error("Error al cargar controles");
+        // Uso de api (Axios) para garantizar el envío de cookies
+        const res = await api.get(endpoint);
+        const data = res.data;
 
-        const data = await res.json();
-
-        // Actualiza las filas con los datos frescos del servidor + la fila vacía
         setFilas([...data, filaVacia()]);
 
-        // Lógica de coincidencias/resaltado solo si hay búsqueda activa
         if (currentQuery && currentQuery.length >= 3) {
           const indices = data
             .map((item, i) =>
@@ -135,26 +125,17 @@ const ControlVehiculos = () => {
           setIndexResaltado(0);
         }
       } catch (e) {
-        setError(e.message);
+        setError(e.response?.data?.error || e.message || "Error al cargar controles");
       } finally {
         setLoading(false);
       }
     },
     [matriculaBuscada]
-  ); // Dependencia del estado de búsqueda
-
-  // ----------------------------------------------------
-  // INICIALIZACIÓN Y EFECTOS
-  // ----------------------------------------------------
+  );
 
   useEffect(() => {
-    // Carga inicial de datos
     cargarControles("");
   }, [cargarControles]);
-
-  // ----------------------------------------------------
-  // LÓGICA DE BÚSQUEDA
-  // ----------------------------------------------------
 
   const resaltarTexto = (texto, termino) => {
     if (!termino) return texto;
@@ -163,7 +144,6 @@ const ControlVehiculos = () => {
   };
 
   const handleBuscar = async () => {
-    // Llama a la versión que respeta el estado de matriculaBuscada
     cargarControles(matriculaBuscada);
   };
 
@@ -179,21 +159,13 @@ const ControlVehiculos = () => {
     );
   };
 
-  // ----------------------------------------------------
-  // MANEJO DE INPUTS Y AUTOCOMPLETADO
-  // ----------------------------------------------------
-
   const autocompletarDatos = async (matricula) => {
     if (!matricula || matricula.length < 3) return null;
     try {
-      const res = await fetch(
-        `${API_BASE}/buscar_matricula?matricula=${encodeURIComponent(
-          matricula
-        )}`,
-        { credentials: "include" }
+      const res = await api.get(
+        `/api/control_vehiculos/buscar_matricula?matricula=${encodeURIComponent(matricula)}`
       );
-      if (!res.ok) return null;
-      return await res.json();
+      return res.data;
     } catch {
       return null;
     }
@@ -226,67 +198,26 @@ const ControlVehiculos = () => {
     setFilas(nuevasFilas);
   };
 
-  // ----------------------------------------------------
-  // ACCIONES CRUD
-  // ----------------------------------------------------
-
   const guardarFila = async (index) => {
     const fila = filas[index];
     try {
       if (fila.esNueva) {
-        // Crear nuevo registro
-        const res = await fetch(API_BASE, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
-          body: JSON.stringify(fila),
-        });
-        const text = await res.text();
-        if (!res.ok) {
-          let errorData;
-          try {
-            errorData = JSON.parse(text);
-          } catch {
-            errorData = {};
-          }
-          throw new Error(errorData.error || "Error al crear registro");
-        }
-        // ¡IMPORTANTE! Recargar los controles para que el nuevo registro
-        // con fecha_entrada (pero sin fecha_salida) aparezca.
+        await api.post("/api/control_vehiculos", fila);
         await cargarControles();
         toast.success("Registro guardado correctamente.");
       } else {
-        // Actualizar registro existente
-        const res = await fetch(`${API_BASE}/${fila.cod_control}`, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
-          body: JSON.stringify(fila),
-        });
-        if (!res.ok) {
-          const text = await res.text();
-          let errorData;
-          try {
-            errorData = JSON.parse(text);
-          } catch {
-            errorData = {};
-          }
-          throw new Error(errorData.error || "Error al actualizar registro");
-        }
-        // ¡IMPORTANTE! Recargar los controles para reflejar el cambio.
-        // Si se añade fecha_salida, el registro debe desaparecer si es anterior a 3 días.
+        await api.put(`/api/control_vehiculos/${fila.cod_control}`, fila);
         await cargarControles();
         toast.success("Registro actualizado correctamente.");
       }
     } catch (e) {
-      toast.error("Error: " + e.message);
+      toast.error("Error: " + (e.response?.data?.error || e.message));
     }
   };
 
   const borrarFila = async (index) => {
     const fila = filas[index];
     if (fila.esNueva) {
-      // Eliminar la fila vacía local
       return setFilas(filas.filter((_, i) => i !== index));
     }
     const confirm = await confirmarBorrado(
@@ -294,24 +225,16 @@ const ControlVehiculos = () => {
     );
     if (!confirm) return;
     try {
-      const res = await fetch(`${API_BASE}/${fila.cod_control}`, {
-        method: "DELETE",
-        credentials: "include",
-      });
-      if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err.error || "Error al borrar registro");
-      }
-      // ¡IMPORTANTE! Recargar los controles para refrescar la lista.
+      await api.delete(`/api/control_vehiculos/${fila.cod_control}`);
       await cargarControles();
       toast.success("Fila eliminada correctamente.");
     } catch (e) {
-      toast.error("Error: " + e.message);
+      toast.error("Error: " + (e.response?.data?.error || e.message));
     }
   };
 
-  if (loading) return <p>Cargando datos...</p>;
-  if (error) return <p>Error: {error}</p>;
+  if (loading) return <p className="p-4">Cargando datos...</p>;
+  if (error) return <p className="p-4 text-red-500">Error: {error}</p>;
 
   return (
     <div className="min-h-screen bg-base-100 text-base-content p-4">
@@ -334,7 +257,6 @@ const ControlVehiculos = () => {
                 setMatriculaBuscada(e.target.value.toUpperCase())
               }
               onKeyDown={(e) => {
-                // Agregado para buscar al presionar Enter
                 if (e.key === "Enter") handleBuscar();
               }}
               className="border px-2 py-1 rounded text-center"
@@ -371,7 +293,6 @@ const ControlVehiculos = () => {
 
         <div className="overflow-x-auto bg-base-100 rounded-b-lg p-4">
           <table className="table-controles w-full text-center table table-zebra border-collapse border border-base-300">
-            {/* Agregando thead para los encabezados */}
             <thead>
               <tr className="h-1 text-xl bg-gray-200 text-black">
                 <th className="px-4 py-2 min-w-[100px] border border-base-300">
@@ -403,7 +324,6 @@ const ControlVehiculos = () => {
                 const matriculaHTML = fila.matricula
                   ? resaltarTexto(fila.matricula, matriculaBuscada)
                   : "";
-                // La fila resaltada debe ser la que tiene el índice de coincidencia actual.
                 const esResaltado = coincidencias[indexResaltado] === i;
 
                 return (
@@ -454,7 +374,6 @@ const ControlVehiculos = () => {
                       <input
                         type="datetime-local"
                         value={fila.fecha_salida}
-                        // La acción de click ahora es un "atajo" para poner la hora actual
                         onClick={() => handleFechaClick(i, "fecha_salida")}
                         onChange={(e) =>
                           handleInputChange(i, "fecha_salida", e.target.value)
@@ -466,7 +385,6 @@ const ControlVehiculos = () => {
                       <input
                         type="datetime-local"
                         value={fila.fecha_entrada}
-                        // La acción de click ahora es un "atajo" para poner la hora actual
                         onClick={() => handleFechaClick(i, "fecha_entrada")}
                         onChange={(e) =>
                           handleInputChange(i, "fecha_entrada", e.target.value)
@@ -503,7 +421,6 @@ const ControlVehiculos = () => {
               })}
             </tbody>
 
-            {/* El footer se mantiene igual para los encabezados fijos */}
             <tfoot
               className="bg-white text-black"
               style={{ position: "sticky", bottom: 0, zIndex: 10 }}

@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
-import { useNavigate } from "react-router-dom";
-import '../btn.css'
+import { useNavigate, Link } from "react-router-dom";
+import toast from "react-hot-toast";
+import "../btn.css";
 
 const Login = () => {
   const { login } = useAuth();
@@ -9,89 +10,95 @@ const Login = () => {
 
   const [nombre, setNombre] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const result = await login({ nombre, password });
+    setLoading(true);
 
-    if (result.success) {
-      navigate("/home");
-    } else {
-      setError(result.message);
+    try {
+      const result = await login({ nombre, password });
+
+      if (result.success) {
+        toast.success("¡Bienvenido/a de nuevo!");
+        navigate("/home");
+      } else {
+        toast.error(result.message || "Credenciales incorrectas");
+      }
+    } catch (err) {
+      console.error("Error al iniciar sesión:", err);
+      toast.error("Ocurrió un error inesperado al conectar con el servidor");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-800 px-6">
-      <section className="w-full max-w-sm min-h-[550px] bg-gray-900 rounded-lg shadow-xl p-10 space-y-8">
-        <br/>
+    <div className="min-h-screen flex items-center justify-center bg-gray-800 px-6 py-12">
+      <section className="w-full max-w-sm bg-gray-900 rounded-lg shadow-xl p-8 space-y-6 border border-gray-700">
         <div className="text-center space-y-2">
           <h2 className="text-2xl font-bold text-white">
             Control de Vehículos
           </h2>
+          <p className="text-sm text-gray-400">Ingresa tus credenciales</p>
         </div>
-        <br/>
-        <form onSubmit={handleSubmit}>
-          <div className="mb-8 flex items-center justify-center">
-            <label className="w-60 text-xl"> Nombre:</label>
-          </div>
-          <br/>
-          <div className="mb-8 flex items-center justify-center">
+
+        <form onSubmit={handleSubmit} className="space-y-5">
+          {/* Campo Nombre */}
+          <div className="flex flex-col items-center">
+            <label className="w-60 text-sm font-medium text-white mb-2 text-left">
+              Nombre:
+            </label>
             <input
-              className="w-60 h-10 px-4 text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 border border-gray-200 rounded text-gray-600 text-left"
+              className="w-60 h-10 px-4 text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 border border-gray-300 rounded text-gray-800"
               type="text"
               value={nombre}
               onChange={(e) => setNombre(e.target.value)}
-              required
-            />
-          </div>
-          <br/>
-          <div className="mb-8 flex items-center justify-center">
-            <label className="w-60 text-xl"> Contraseña:</label>
-          </div>
-          <br/>
-          <div className="mb-6 flex items-center justify-center">
-            <input
-              className="w-60 h-10 px-4 text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 border border-gray-200 rounded text-gray-600 text-left"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Tu usuario"
+              disabled={loading}
               required
             />
           </div>
 
-          {error && (
-            <p className="text-sm text-red-500 text-center font-semibold mb-4">
-              {error}
-            </p>
-          )}
-          <br/>
-          <br/>
-          <div className="mb-6 flex items-center justify-center">
+          {/* Campo Contraseña */}
+          <div className="flex flex-col items-center">
+            <label className="w-60 text-sm font-medium text-white mb-2 text-left">
+              Contraseña:
+            </label>
+            <input
+              className="w-60 h-10 px-4 text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 border border-gray-300 rounded text-gray-800"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="••••••••"
+              disabled={loading}
+              required
+            />
+          </div>
+
+          {/* Botón Iniciar Sesión */}
+          <div className="flex justify-center pt-2">
             <button
               type="submit"
-              className="btn-login"
-              // w-60 h-14 bg-blue-600 hover:bg-blue-700 rounded text-sm font-bold text-white transition duration-200
+              disabled={loading}
+              className="btn-login w-60 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Iniciar sesión
+              {loading ? "Iniciando sesión..." : "Iniciar sesión"}
             </button>
           </div>
-          <br/>
-          <br/>
-          <div className="flex items-center justify-center text-gray-300">
-            
-            <a className="text-sm text-blue-500 hover:underline" href="/register">
+
+          {/* Enlace a Registro */}
+          <div className="flex items-center justify-center pt-2">
+            <Link
+              to="/register"
+              className="text-sm text-blue-400 hover:text-blue-300 hover:underline transition-colors"
+            >
               ¿No tienes cuenta? Regístrate aquí
-            </a>
-            
+            </Link>
           </div>
-          
         </form>
-        
       </section>
     </div>
-   
   );
 };
 

@@ -3,12 +3,16 @@ import axios from "axios";
 
 export const AuthContext = createContext();
 
+// Detecta automáticamente la URL del backend según el entorno
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001/api-vehiculos";
+
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
   // Comprobar sesión activa al montar
   useEffect(() => {
-    axios.get("http://localhost:3000/api/auth/me", { withCredentials: true })
+    axios
+      .get(`${API_URL}/api/auth/me`, { withCredentials: true })
       .then((res) => setUser(res.data))
       .catch(() => setUser(null));
   }, []);
@@ -16,22 +20,34 @@ export const AuthProvider = ({ children }) => {
   // Login
   const login = async (credentials) => {
     try {
-      //console.log("Enviando login con:", credentials);
+      // Formatear las credenciales (convierte 'nombre' a mayúsculas si existe)
+      const payload = {
+        ...credentials,
+        nombre: credentials.nombre ? credentials.nombre.toUpperCase() : credentials.nombre
+      };
 
-      const res = await axios.post("http://localhost:3000/api/auth/login", credentials, {
+      const res = await axios.post(`${API_URL}/api/auth/login`, payload, {
         withCredentials: true,
       });
       setUser(res.data.user); // actualiza estado
       return { success: true };
     } catch (err) {
-      return { success: false, message: err.response?.data?.error || "Error desconocido" };
+      return {
+        success: false,
+        message: err.response?.data?.error || "Error desconocido",
+      };
     }
   };
 
   // Logout
   const logout = async () => {
-    await axios.post("http://localhost:3000/api/auth/logout", {}, { withCredentials: true });
-    setUser(null);
+    try {
+      await axios.post(`${API_URL}/api/auth/logout`, {}, { withCredentials: true });
+    } catch (err) {
+      console.error("Error al cerrar sesión", err);
+    } finally {
+      setUser(null);
+    }
   };
 
   return (

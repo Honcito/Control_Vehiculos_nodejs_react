@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import toast from "react-hot-toast";
+import api from "../api/api"; // Instancia de Axios centralizada
 
 const FormularioPropietario = () => {
   const navigate = useNavigate();
@@ -14,16 +15,9 @@ const FormularioPropietario = () => {
 
   useEffect(() => {
     if (id) {
-      fetch(`http://localhost:3000/api/propietarios/${id}`, {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-      })
-        .then((res) => {
-          if (!res.ok) throw new Error("Error al cargar propietario");
-          return res.json();
-        })
-        .then((data) => setFormData(data))
+      api
+        .get(`/api/propietarios/${id}`)
+        .then((res) => setFormData(res.data))
         .catch(() => toast.error("Error al cargar propietario"));
     }
   }, [id]);
@@ -33,28 +27,21 @@ const FormularioPropietario = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const method = id ? "PUT" : "POST";
-    const url = id
-      ? `http://localhost:3000/api/propietarios/${id}`
-      : "http://localhost:3000/api/propietarios";
-
-    fetch(url, {
-      method,
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-      body: JSON.stringify(formData),
-    })
-      .then((res) => {
-        if (!res.ok) throw new Error("Error al guardar");
-        toast.success(id ? "Propietario actualizado" : "Propietario creado");
-        navigate("/propietarios");
-      })
-      .catch((err) => {
-        console.error("Error en el formulario:", err);
-        toast.error(err.message);
-      });
+    try {
+      if (id) {
+        await api.put(`/api/propietarios/${id}`, formData);
+        toast.success("Propietario actualizado");
+      } else {
+        await api.post("/api/propietarios", formData);
+        toast.success("Propietario creado");
+      }
+      navigate("/propietarios");
+    } catch (err) {
+      console.error("Error en el formulario:", err);
+      toast.error(err.response?.data?.error || err.message || "Error al guardar");
+    }
   };
 
   const handleDelete = () => {
@@ -73,21 +60,18 @@ const FormularioPropietario = () => {
             </button>
             <button
               className="bg-red-600 px-3 py-1 rounded hover:bg-red-700"
-              onClick={() => {
+              onClick={async () => {
                 toast.loading("Eliminando...", { id: toastId });
-
-                fetch(`http://localhost:3000/api/propietarios/${id}`, {
-                  method: "DELETE",
-                  credentials: "include",
-                })
-                  .then((res) => {
-                    if (!res.ok) throw new Error("Error al eliminar");
-                    toast.success("Propietario eliminado", { id: toastId });
-                    navigate("/propietarios");
-                  })
-                  .catch((err) =>
-                    toast.error(err.message || "Error al eliminar", { id: toastId })
+                try {
+                  await api.delete(`/api/propietarios/${id}`);
+                  toast.success("Propietario eliminado", { id: toastId });
+                  navigate("/propietarios");
+                } catch (err) {
+                  toast.error(
+                    err.response?.data?.error || err.message || "Error al eliminar",
+                    { id: toastId }
                   );
+                }
               }}
             >
               Confirmar

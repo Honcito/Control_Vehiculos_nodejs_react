@@ -1,123 +1,126 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import '../btn.css';
+import toast from "react-hot-toast";
+import api from "../lib/axios"; // Instancia centralizada de Axios
+import "../btn.css";
 
 const Register = () => {
-  const [nombre, setNombre] = useState('');
-  const [password, setPassword] = useState('');
-  const [telefono, setTelefono] = useState('');
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  const [formData, setFormData] = useState({
+    nombre: "",
+    password: "",
+    telefono: "",
+  });
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
-    setSuccess('');
 
-    if (!nombre || !password) {
-      setError("Los campos nombre y contraseña son obligatorios");
+    if (!formData.nombre || !formData.password) {
+      toast.error("Los campos nombre y contraseña son obligatorios");
       return;
     }
 
+    setLoading(true);
+
     try {
-      const response = await fetch('http://localhost:3000/api/auth/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ nombre, password, telefono }),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Error al registrar usuario');
-      }
-
-      setSuccess("Registro exitoso. Redirigiendo a inicio de sesión...");
-      setTimeout(() => navigate('/login'), 2000);
+      await api.post("/api/auth/register", formData);
+      
+      toast.success("Registro exitoso. Redirigiendo a inicio de sesión...");
+      setTimeout(() => navigate("/login"), 1500);
     } catch (err) {
-      setError(err.message);
+      console.error("Error en registro:", err);
+      toast.error(
+        err.response?.data?.message || "Error al registrar el usuario"
+      );
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-800 px-6">
-      <section className="w-full max-w-sm min-h-[550px] bg-gray-900 rounded-lg shadow-xl p-10 space-y-8">
-        <br />
-        <div className="text-center space-y-2">
-          <h2 className="text-2xl font-bold text-white">Registro de Empleados</h2>
+    <div className="min-h-screen flex items-center justify-center bg-gray-800 px-6 py-10">
+      <section className="w-full max-w-md bg-gray-900 rounded-lg shadow-xl p-8 border border-gray-700">
+        <div className="text-center mb-6">
+          <h2 className="text-2xl font-bold text-white">
+            Registro de Empleados
+          </h2>
+          <p className="text-sm text-gray-400 mt-1">
+            Crea una cuenta para acceder al sistema
+          </p>
         </div>
-        <br />
-        <form onSubmit={handleSubmit}>
-          <div className="mb-8 flex items-center justify-center">
-            <label className="w-60 text-xl">
-              Nombre:<span className="text-red-500">*</span>
+
+        <form onSubmit={handleSubmit} className="space-y-5">
+          <div>
+            <label className="block text-sm font-medium text-gray-200 mb-1">
+              Nombre de usuario <span className="text-red-500">*</span>
             </label>
-          </div>
-          <br />
-          <div className="mb-8 flex items-center justify-center">
             <input
-              className="w-60 h-10 px-4 text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 border border-gray-200 rounded text-gray-600 text-left"
               type="text"
-              value={nombre}
-              onChange={(e) => setNombre(e.target.value)}
+              name="nombre"
+              value={formData.nombre}
+              onChange={handleChange}
               required
-              placeholder="Nombre de usuario"
+              placeholder="Ej: juanperez"
+              className="w-full px-4 py-2 text-sm bg-gray-800 text-white border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
             />
           </div>
-          <br />
-          <div className="mb-8 flex items-center justify-center">
-            <label className="w-60 text-xl">
-              Contraseña:<span className="text-red-500">*</span>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-200 mb-1">
+              Contraseña <span className="text-red-500">*</span>
             </label>
-          </div>
-          <br />
-          <div className="mb-6 flex items-center justify-center">
             <input
-              className="w-60 h-10 px-4 text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 border border-gray-200 rounded text-gray-600 text-left"
               type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
               required
-              placeholder="Contraseña"
+              placeholder="••••••••"
+              className="w-full px-4 py-2 text-sm bg-gray-800 text-white border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
             />
           </div>
-          <br />
-          <div className="mb-6 flex items-center justify-center">
-            <label className="w-60 text-xl text-white">Teléfono (opcional)</label>
-          </div>
-          <br/>
-          <div className="mb-6 flex items-center justify-center">
+
+          <div>
+            <label className="block text-sm font-medium text-gray-200 mb-1">
+              Teléfono <span className="text-gray-400 text-xs">(Opcional)</span>
+            </label>
             <input
-              className="w-60 h-10 px-4 text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 border border-gray-200 rounded text-gray-600 text-left"
               type="tel"
-              value={telefono}
-              onChange={(e) => setTelefono(e.target.value)}
+              name="telefono"
+              value={formData.telefono}
+              onChange={handleChange}
               placeholder="Ej: 600123456"
+              className="w-full px-4 py-2 text-sm bg-gray-800 text-white border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
             />
           </div>
-          <br/>
-          {error && (
-            <p className="text-sm text-red-500 text-center font-semibold mb-4">
-              {error}
-            </p>
-          )}
 
-          {success && (
-            <p className="text-sm text-green-400 text-center font-semibold mb-4">
-              {success}
-            </p>
-          )}
-
-          <br />
-          <div className="mb-6 flex items-center justify-center">
-            <button type="submit" className="btn-login">
-              Registrarse
+          <div className="pt-2">
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full btn-login flex justify-center items-center py-2.5 px-4 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-md transition-colors disabled:opacity-50"
+            >
+              {loading ? "Registrando..." : "Registrarse"}
             </button>
           </div>
-          <br />
-          
+
+          <div className="text-center pt-2">
+            <button
+              type="button"
+              onClick={() => navigate("/login")}
+              className="text-sm text-blue-400 hover:underline bg-transparent border-0 cursor-pointer"
+            >
+              ¿Ya tienes cuenta? Inicia sesión aquí
+            </button>
+          </div>
         </form>
       </section>
     </div>
