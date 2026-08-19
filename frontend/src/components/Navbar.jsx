@@ -16,9 +16,9 @@ const Navbar = () => {
         className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-center relative"
         style={{ width: "100%", margin: "0 auto" }}
       >
-        {/* Unificación y centrado total de la lista */}
+        {/* Lista del menú centrada con estilos unificados */}
         <ul 
-          className={`navbar-menu ${menuActive ? "active" : ""} flex items-center justify-center gap-4 md:gap-6 w-full`}
+          className={`navbar-menu ${menuActive ? "active" : ""} flex items-center justify-center gap-6 md:gap-8 w-full`}
           style={{ margin: "0 auto", padding: "0", listStyle: "none" }}
         >
           <li>
@@ -26,7 +26,7 @@ const Navbar = () => {
               to="/home" 
               className={({ isActive }) => 
                 isActive 
-                  ? "px-4 py-2 bg-emerald-500/20 text-emerald-400 font-bold rounded-full transition-all" 
+                  ? "text-emerald-400 font-bold transition-colors" 
                   : "text-base-content font-semibold hover:text-emerald-400 transition-colors"
               }
             >
@@ -40,7 +40,9 @@ const Navbar = () => {
                 <NavLink 
                   to="/propietarios"
                   className={({ isActive }) => 
-                    isActive ? "text-emerald-400 font-bold" : "text-base-content font-semibold hover:text-emerald-400 transition-colors"
+                    isActive 
+                      ? "text-emerald-400 font-bold transition-colors" 
+                      : "text-base-content font-semibold hover:text-emerald-400 transition-colors"
                   }
                 >
                   Propietarios
@@ -50,7 +52,9 @@ const Navbar = () => {
                 <NavLink 
                   to="/vehiculos"
                   className={({ isActive }) => 
-                    isActive ? "text-emerald-400 font-bold" : "text-base-content font-semibold hover:text-emerald-400 transition-colors"
+                    isActive 
+                      ? "text-emerald-400 font-bold transition-colors" 
+                      : "text-base-content font-semibold hover:text-emerald-400 transition-colors"
                   }
                 >
                   Vehículos
@@ -60,7 +64,9 @@ const Navbar = () => {
                 <NavLink 
                   to="/usuarios"
                   className={({ isActive }) => 
-                    isActive ? "text-emerald-400 font-bold" : "text-base-content font-semibold hover:text-emerald-400 transition-colors"
+                    isActive 
+                      ? "text-emerald-400 font-bold transition-colors" 
+                      : "text-base-content font-semibold hover:text-emerald-400 transition-colors"
                   }
                 >
                   Usuarios
@@ -69,12 +75,14 @@ const Navbar = () => {
             </>
           )}
 
-          {/* Visible para ambos roles */}
+          {/* Visible para todos los roles */}
           <li>
             <NavLink 
               to="/control_vehiculos"
               className={({ isActive }) => 
-                isActive ? "text-emerald-400 font-bold" : "text-base-content font-semibold hover:text-emerald-400 transition-colors"
+                isActive 
+                  ? "text-emerald-400 font-bold transition-colors" 
+                  : "text-base-content font-semibold hover:text-emerald-400 transition-colors"
               }
             >
               Control de Vehículos
@@ -95,7 +103,7 @@ const Navbar = () => {
           </li>
         </ul>
 
-        {/* Botón hamburguesa para móvil (posicionado a la derecha en pantallas pequeñas) */}
+        {/* Botón hamburguesa para dispositivos móviles */}
         <button
           className={`navbar-toggle ${
             menuActive ? "active" : ""
