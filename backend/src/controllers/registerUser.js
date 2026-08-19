@@ -3,7 +3,7 @@ import bcrypt from "bcrypt";
 
 // Abre la base de datos (ajusta la ruta si es necesario)
 const db = new sqlite3.Database(
-  process.env.SQLITE_PATH || "C:/database/control_vehiculos_react.db"
+  process.env.SQLITE_PATH || "/media/hong/control-vehiculos/backend/database/control_vehiculos_react.db"
 );
 
 export const registerUser = (req, res) => {
