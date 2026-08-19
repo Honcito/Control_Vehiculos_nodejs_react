@@ -95,10 +95,10 @@ const Propietarios = () => {
                     className="hover:bg-gray-800/60 transition-colors"
                   >
                     <td className="px-4 py-3">{prop.id_propietario}</td>
-                    <td className="px-4 py-3">{prop.empresa}</td>
-                    <td className="px-4 py-3">{prop.nombre}</td>
-                    <td className="px-4 py-3">{prop.num_aparcamiento}</td>
-                    <td className="px-4 py-3">{prop.telefono}</td>
+                    <td className="px-4 py-3">{prop.empresa || "-"}</td>
+                    <td className="px-4 py-3">{prop.nombre || "-"}</td>
+                    <td className="px-4 py-3">{prop.num_aparcamiento ?? "-"}</td>
+                    <td className="px-4 py-3">{prop.telefono || "-"}</td>
                     <td className="px-4 py-3">
                       <div className="flex justify-center space-x-2">
                         <button

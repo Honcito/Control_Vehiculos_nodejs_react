@@ -93,17 +93,17 @@ const Vehiculos = () => {
                     className="hover:bg-gray-800/60 transition-colors"
                   >
                     <td className="px-4 py-3">{v.cod_vehiculo}</td>
-                    <td className="px-4 py-3 font-semibold">{v.matricula}</td>
-                    <td className="px-4 py-3">{v.num_aparcamiento || "—"}</td>
-                    <td className="px-4 py-3">{v.observaciones || "—"}</td>
+                    <td className="px-4 py-3 font-semibold">{v.matricula || "-"}</td>
+                    <td className="px-4 py-3">{v.num_aparcamiento ?? "-"}</td>
+                    <td className="px-4 py-3">{v.observaciones || "-"}</td>
                     <td className="px-4 py-3">
-                      {v.propietario?.empresa || "—"}
+                      {v.propietario?.empresa || "-"}
                     </td>
                     <td className="px-4 py-3">
-                      {v.propietario?.nombre || "—"}
+                      {v.propietario?.nombre || "-"}
                     </td>
                     <td className="px-4 py-3">
-                      {v.propietario?.telefono || "—"}
+                      {v.propietario?.telefono || "-"}
                     </td>
                     <td className="px-4 py-3">
                       <div className="flex justify-center space-x-2">

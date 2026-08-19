@@ -90,9 +90,9 @@ const Usuarios = () => {
                     className="hover:bg-gray-800/60 transition-colors"
                   >
                     <td className="px-4 py-3">{usr.id_usuario}</td>
-                    <td className="px-4 py-3">{usr.nombre}</td>
-                    <td className="px-4 py-3">{usr.telefono || "—"}</td>
-                    <td className="px-4 py-3">{usr.rol || "—"}</td>
+                    <td className="px-4 py-3">{usr.nombre || "-"}</td>
+                    <td className="px-4 py-3">{usr.telefono || "-"}</td>
+                    <td className="px-4 py-3">{usr.rol || "-"}</td>
                     <td className="px-4 py-3">
                       <div className="flex justify-center space-x-2">
                         <button

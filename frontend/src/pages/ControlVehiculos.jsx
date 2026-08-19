@@ -102,7 +102,6 @@ const ControlVehiculos = () => {
             : ""
         }`;
 
-        // Uso de api (Axios) para garantizar el envío de cookies
         const res = await api.get(endpoint);
         const data = res.data;
 
@@ -140,7 +139,7 @@ const ControlVehiculos = () => {
   const resaltarTexto = (texto, termino) => {
     if (!termino) return texto;
     const regex = new RegExp(`(${termino})`, "gi");
-    return texto.replace(regex, "<mark>$1</mark>");
+    return texto.replace(regex, "<mark class='bg-yellow-300 text-black px-1 rounded'>$1</mark>");
   };
 
   const handleBuscar = async () => {
@@ -233,93 +232,82 @@ const ControlVehiculos = () => {
     }
   };
 
-  if (loading) return <p className="p-4">Cargando datos...</p>;
-  if (error) return <p className="p-4 text-red-500">Error: {error}</p>;
+  if (loading) return <p className="p-6 text-white text-lg">Cargando datos...</p>;
+  if (error) return <p className="p-6 text-red-400 text-lg">Error: {error}</p>;
 
   return (
-    <div className="min-h-screen bg-base-100 text-base-content p-4">
-      <div className="bg-base-200 rounded-lg shadow-sm">
-        <div className="bg-base-500 rounded-t-lg flex items-center justify-between px-4 py-3">
-          <h2 className="text-3xl font-bold">Control de Vehículos</h2>
-          <button onClick={exportarPDF} className="btn-add mb-4">
-            Exportar a PDF
-          </button>
-          <div className="flex items-center gap-x-2 mb-4">
-            <label htmlFor="buscarMatricula" className="font-semibold">
-              Buscar Matrícula
-            </label>
-            <input
-              id="buscarMatricula"
-              type="text"
-              placeholder="Buscar matrícula..."
-              value={matriculaBuscada}
-              onChange={(e) =>
-                setMatriculaBuscada(e.target.value.toUpperCase())
-              }
-              onKeyDown={(e) => {
-                if (e.key === "Enter") handleBuscar();
-              }}
-              className="border px-2 py-1 rounded text-center"
-            />
+    <div className="min-h-dvh w-full bg-gray-800 text-white p-6">
+      <div className="bg-gray-900 rounded-lg shadow-xl border border-gray-700 overflow-hidden">
+        {/* Cabecera / Barra de Controles */}
+        <div className="p-6 border-b border-gray-700 flex flex-wrap items-center justify-between gap-4">
+          <h2 className="text-3xl font-bold text-white">Control de Vehículos</h2>
+          
+          <div className="flex flex-wrap items-center gap-3">
             <button
-              onClick={handleBuscar}
-              className="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600"
+              onClick={exportarPDF}
+              className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-md transition-colors"
             >
-              Buscar
+              Exportar a PDF
             </button>
-          </div>
-          {coincidencias.length > 0 && (
-            <div className="ml-4 flex items-center space-x-2 text-white">
+
+            <div className="flex items-center gap-2">
+              <input
+                id="buscarMatricula"
+                type="text"
+                placeholder="Buscar matrícula..."
+                value={matriculaBuscada}
+                onChange={(e) => setMatriculaBuscada(e.target.value.toUpperCase())}
+                onKeyDown={(e) => e.key === "Enter" && handleBuscar()}
+                className="px-3 py-2 text-base bg-gray-800 text-white border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 uppercase"
+              />
               <button
-                onClick={anteriorResaltado}
-                className="bg-gray-800 rounded px-2 py-1"
-                title="Anterior"
+                onClick={handleBuscar}
+                className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-md transition-colors"
               >
-                &lt;
-              </button>
-              <span>
-                {indexResaltado + 1} / {coincidencias.length}
-              </span>
-              <button
-                onClick={siguienteResaltado}
-                className="bg-gray-800 rounded px-2 py-1"
-                title="Siguiente"
-              >
-                &gt;
+                Buscar
               </button>
             </div>
-          )}
+
+            {coincidencias.length > 0 && (
+              <div className="flex items-center space-x-2 text-sm bg-gray-800 px-3 py-1.5 rounded-md border border-gray-700">
+                <button
+                  onClick={anteriorResaltado}
+                  className="px-2 py-0.5 bg-gray-700 hover:bg-gray-600 rounded text-white"
+                  title="Anterior"
+                >
+                  &lt;
+                </button>
+                <span>
+                  {indexResaltado + 1} / {coincidencias.length}
+                </span>
+                <button
+                  onClick={siguienteResaltado}
+                  className="px-2 py-0.5 bg-gray-700 hover:bg-gray-600 rounded text-white"
+                  title="Siguiente"
+                >
+                  &gt;
+                </button>
+              </div>
+            )}
+          </div>
         </div>
 
-        <div className="overflow-x-auto bg-base-100 rounded-b-lg p-4">
-          <table className="table-controles w-full text-center table table-zebra border-collapse border border-base-300">
+        {/* Tabla principal */}
+        <div className="overflow-x-auto p-4">
+          <table className="w-full text-center border-collapse border border-gray-700">
             <thead>
-              <tr className="h-1 text-xl bg-gray-200 text-black">
-                <th className="px-4 py-2 min-w-[100px] border border-base-300">
-                  Matrícula
-                </th>
-                <th className="px-4 py-2 min-w-[120px] border border-base-300">
-                  Empresa
-                </th>
-                <th className="px-4 py-2 min-w-[100px] border border-base-300">
-                  Nº Plaza
-                </th>
-                <th className="px-4 py-2 min-w-[160px] border border-base-300">
-                  Fecha Salida
-                </th>
-                <th className="px-4 py-2 min-w-[160px] border border-base-300">
-                  Fecha Entrada
-                </th>
-                <th className="px-4 py-2 min-w-[160px] border border-base-300">
-                  Observaciones
-                </th>
-                <th className="px-4 py-2 min-w-[140px] border border-base-300">
-                  Acciones
-                </th>
+              <tr className="bg-gray-800 text-gray-200 text-base">
+                <th className="px-4 py-3 border border-gray-700 min-w-[120px]">Matrícula</th>
+                <th className="px-4 py-3 border border-gray-700 min-w-[180px]">Empresa</th>
+                <th className="px-4 py-3 border border-gray-700 min-w-[100px]">Nº Plaza</th>
+                <th className="px-4 py-3 border border-gray-700 min-w-[170px]">Fecha Salida</th>
+                <th className="px-4 py-3 border border-gray-700 min-w-[170px]">Fecha Entrada</th>
+                <th className="px-4 py-3 border border-gray-700 min-w-[200px]">Observaciones</th>
+                <th className="px-4 py-3 border border-gray-700 min-w-[160px]">Acciones</th>
               </tr>
             </thead>
 
-            <tbody className="bg-base-100 divide-y divide-base-700 text-lg font-bold">
+            <tbody className="divide-y divide-gray-700 text-sm font-medium">
               {filas.map((fila, i) => {
                 const matriculaHTML = fila.matricula
                   ? resaltarTexto(fila.matricula, matriculaBuscada)
@@ -329,11 +317,15 @@ const ControlVehiculos = () => {
                 return (
                   <tr
                     key={fila.cod_control ?? `nueva-${i}`}
-                    className={`hover:bg-base-300 ${
-                      esResaltado ? "bg-yellow-300" : ""
-                    }`}
+                    className={`transition-colors ${
+                      esResaltado
+                        ? "bg-yellow-900/40"
+                        : i % 2 === 0
+                        ? "bg-gray-900"
+                        : "bg-gray-800/50"
+                    } hover:bg-gray-700/50`}
                   >
-                    <td className="border border-base-300 px-2 py-2 min-w-[120px]">
+                    <td className="border border-gray-700 px-3 py-2">
                       {fila.esNueva ? (
                         <input
                           type="text"
@@ -345,32 +337,33 @@ const ControlVehiculos = () => {
                               e.target.value.toUpperCase()
                             )
                           }
-                          className="w-24 px-2 py-1 border border-base-300 rounded text-center"
+                          className="w-28 px-2 py-1 bg-gray-50 text-gray-900 font-semibold border border-gray-300 rounded text-center focus:ring-2 focus:ring-blue-500"
                           autoFocus
                         />
                       ) : (
                         <span
+                          className="font-bold text-base"
                           dangerouslySetInnerHTML={{ __html: matriculaHTML }}
                         />
                       )}
                     </td>
-                    <td className="border border-base-300 px-4 py-2 min-w-[220px]">
+                    <td className="border border-gray-700 px-3 py-2">
                       <input
                         type="text"
                         value={fila.empresa}
                         disabled
-                        className="w-68 px-2 py-1 border border-base-300 rounded bg-base-200 text-base-content text-center"
+                        className="w-full px-2 py-1 bg-gray-800 text-gray-300 border border-gray-700 rounded text-center cursor-not-allowed"
                       />
                     </td>
-                    <td className="border border-base-300 px-4 py-2">
+                    <td className="border border-gray-700 px-3 py-2">
                       <input
                         type="number"
                         value={fila.num_aparcamiento}
                         disabled
-                        className="px-2 py-1 border border-base-300 rounded bg-base-200 cursor-not-allowed text-center font-extrabold"
+                        className="w-20 px-2 py-1 bg-gray-800 text-gray-300 font-bold border border-gray-700 rounded text-center cursor-not-allowed"
                       />
                     </td>
-                    <td className="border border-base-300 px-4 py-2">
+                    <td className="border border-gray-700 px-3 py-2">
                       <input
                         type="datetime-local"
                         value={fila.fecha_salida}
@@ -378,10 +371,10 @@ const ControlVehiculos = () => {
                         onChange={(e) =>
                           handleInputChange(i, "fecha_salida", e.target.value)
                         }
-                        className="px-2 py-1 border border-base-400 rounded text-center text-lg"
+                        className="px-2 py-1 bg-gray-800 text-white border border-gray-600 rounded text-center focus:ring-2 focus:ring-blue-500"
                       />
                     </td>
-                    <td className="border border-base-300 px-4 py-2">
+                    <td className="border border-gray-700 px-3 py-2">
                       <input
                         type="datetime-local"
                         value={fila.fecha_entrada}
@@ -389,64 +382,49 @@ const ControlVehiculos = () => {
                         onChange={(e) =>
                           handleInputChange(i, "fecha_entrada", e.target.value)
                         }
-                        className="px-2 py-1 border border-base-400 rounded text-center"
+                        className="px-2 py-1 bg-gray-800 text-white border border-gray-600 rounded text-center focus:ring-2 focus:ring-blue-500"
                       />
                     </td>
-                    <td className="border border-base-300 px-4 py-2">
+                    <td className="border border-gray-700 px-3 py-2">
                       <textarea
                         value={fila.observaciones}
                         onChange={(e) =>
                           handleInputChange(i, "observaciones", e.target.value)
                         }
-                        className="px-2 py-1 border border-base-400 rounded resize-y overflow-auto min-h-[32px]"
+                        className="w-full px-2 py-1 bg-gray-800 text-white border border-gray-600 rounded resize-y min-h-[36px] focus:ring-2 focus:ring-blue-500"
                         rows="1"
                       />
                     </td>
-                    <td className="border border-base-300 px-4 py-2 text-center flex justify-center space-x-2">
-                      <button
-                        onClick={() => guardarFila(i)}
-                        className="btn-update px-3 py-1 rounded bg-blue-600 text-white hover:bg-blue-700"
-                      >
-                        {fila.esNueva ? "Guardar" : "Actualizar"}
-                      </button>
-                      <button
-                        onClick={() => borrarFila(i)}
-                        className="btn-delete px-3 py-1 rounded bg-red-600 text-white hover:bg-red-700"
-                      >
-                        Borrar
-                      </button>
+                    <td className="border border-gray-700 px-3 py-2">
+                      <div className="flex justify-center space-x-2">
+                        <button
+                          onClick={() => guardarFila(i)}
+                          className="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded font-medium transition-colors"
+                        >
+                          {fila.esNueva ? "Guardar" : "Actualizar"}
+                        </button>
+                        <button
+                          onClick={() => borrarFila(i)}
+                          className="px-3 py-1 bg-red-600 hover:bg-red-700 text-white rounded font-medium transition-colors"
+                        >
+                          Borrar
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 );
               })}
             </tbody>
 
-            <tfoot
-              className="bg-white text-black"
-              style={{ position: "sticky", bottom: 0, zIndex: 10 }}
-            >
-              <tr className="h-1 text-xl">
-                <th className="px-4 py-2 min-w-[100px] border border-base-300">
-                  Matrícula
-                </th>
-                <th className="px-4 py-2 min-w-[120px] border border-base-300">
-                  Empresa
-                </th>
-                <th className="px-4 py-2 min-w-[100px] border border-base-300">
-                  Nº Plaza
-                </th>
-                <th className="px-4 py-2 min-w-[160px] border border-base-300">
-                  Fecha Salida
-                </th>
-                <th className="px-4 py-2 min-w-[160px] border border-base-300">
-                  Fecha Entrada
-                </th>
-                <th className="px-4 py-2 min-w-[160px] border border-base-300">
-                  Observaciones
-                </th>
-                <th className="px-4 py-2 min-w-[140px] border border-base-300">
-                  Acciones
-                </th>
+            <tfoot className="bg-gray-800 text-gray-300 sticky bottom-0 z-10 border-t border-gray-700">
+              <tr className="text-sm font-semibold">
+                <th className="px-4 py-2 border border-gray-700">Matrícula</th>
+                <th className="px-4 py-2 border border-gray-700">Empresa</th>
+                <th className="px-4 py-2 border border-gray-700">Nº Plaza</th>
+                <th className="px-4 py-2 border border-gray-700">Fecha Salida</th>
+                <th className="px-4 py-2 border border-gray-700">Fecha Entrada</th>
+                <th className="px-4 py-2 border border-gray-700">Observaciones</th>
+                <th className="px-4 py-2 border border-gray-700">Acciones</th>
               </tr>
             </tfoot>
           </table>

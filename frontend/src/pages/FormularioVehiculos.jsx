@@ -102,73 +102,73 @@ const FormularioVehiculos = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-800 px-6">
-      <section className="w-full max-w-sm min-h-[550px] bg-gray-900 rounded-lg shadow-xl p-10 space-y-8">
-        <div className="text-center space-y-2">
+    <div className="min-h-dvh flex items-center justify-center bg-gray-800 px-4 py-8 text-white">
+      <section className="w-full max-w-md bg-gray-900 rounded-lg shadow-xl border border-gray-700 p-8">
+        <div className="text-center mb-6">
           <h2 className="text-2xl font-bold text-white">
             {id ? "Editar Vehículo" : "Nuevo Vehículo"}
           </h2>
         </div>
-        <br />
-        <form onSubmit={handleSubmit} className="space-y-4">
+
+        <form onSubmit={handleSubmit} className="space-y-5">
           {/* Matrícula */}
-          <div className="mb-8 flex items-center justify-center">
-            <label className="w-60 text-xl text-white">Matrícula:</label>
-          </div>
-          <div className="mb-8 flex items-center justify-center">
+          <div className="space-y-2">
+            <label className="block text-sm font-medium text-gray-300">
+              Matrícula
+            </label>
             <input
               type="text"
               name="matricula"
-              placeholder="Matrícula"
+              placeholder="Matrícula del vehículo"
               value={formData.matricula}
               onChange={handleChange}
-              className="w-60 h-10 px-4 text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 border border-gray-200 rounded text-gray-600 text-left"
+              className="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded-md text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             />
           </div>
 
           {/* Número Aparcamiento */}
-          <div className="mb-8 flex items-center justify-center">
-            <label className="w-60 text-xl text-white">Número de aparcamiento:</label>
-          </div>
-          <div className="mb-8 flex items-center justify-center">
+          <div className="space-y-2">
+            <label className="block text-sm font-medium text-gray-300">
+              Número de aparcamiento
+            </label>
             <input
               type="number"
               name="num_aparcamiento"
-              placeholder="Número de aparcamiento"
+              placeholder="Nº de plaza o aparcamiento"
               value={formData.num_aparcamiento}
               onChange={handleChange}
-              className="w-60 h-10 px-4 text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 border border-gray-200 rounded text-gray-600 text-left"
+              className="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded-md text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
               min={0}
             />
           </div>
 
           {/* Observaciones */}
-          <div className="mb-8 flex items-center justify-center">
-            <label className="w-60 text-xl text-white">Observaciones:</label>
-          </div>
-          <div className="mb-8 flex items-center justify-center">
+          <div className="space-y-2">
+            <label className="block text-sm font-medium text-gray-300">
+              Observaciones
+            </label>
             <input
               type="text"
               name="observaciones"
-              placeholder="Observaciones"
+              placeholder="Observaciones adicionales"
               value={formData.observaciones}
               onChange={handleChange}
-              className="w-60 h-10 px-4 text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 border border-gray-200 rounded text-gray-600 text-left"
+              className="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded-md text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
 
           {/* Empresa (select) */}
-          <div className="mb-8 flex items-center justify-center">
-            <label className="w-60 text-xl text-white">Empresa:</label>
-          </div>
-          <div className="mb-8 flex items-center justify-center">
+          <div className="space-y-2">
+            <label className="block text-sm font-medium text-gray-300">
+              Empresa
+            </label>
             <select
               name="id_propietario"
               value={formData.id_propietario}
               onChange={handleEmpresaChange}
-              className="w-60 h-10 px-4 text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 border border-gray-200 rounded text-gray-600"
+              className="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded-md text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             >
               <option value="">Selecciona una empresa</option>
@@ -181,38 +181,49 @@ const FormularioVehiculos = () => {
           </div>
 
           {/* Nombre propietario (autocompletado, readonly) */}
-          <div className="mb-8 flex items-center justify-center">
-            <label className="w-60 text-xl text-white">Nombre propietario:</label>
-          </div>
-          <div className="mb-8 flex items-center justify-center">
+          <div className="space-y-2">
+            <label className="block text-sm font-medium text-gray-300">
+              Nombre del propietario
+            </label>
             <input
               type="text"
               name="nombre_propietario"
               placeholder="Nombre propietario"
               value={formData.nombre_propietario}
               readOnly
-              className="w-60 h-10 px-4 text-sm bg-gray-300 border border-gray-200 rounded text-gray-600 text-left cursor-not-allowed"
+              className="w-full px-3 py-2 bg-gray-700/50 border border-gray-600/50 rounded-md text-gray-400 text-sm cursor-not-allowed"
             />
           </div>
 
           {/* Teléfono propietario (autocompletado, readonly) */}
-          <div className="mb-8 flex items-center justify-center">
-            <label className="w-60 text-xl text-white">Teléfono propietario:</label>
-          </div>
-          <div className="mb-8 flex items-center justify-center">
+          <div className="space-y-2">
+            <label className="block text-sm font-medium text-gray-300">
+              Teléfono del propietario
+            </label>
             <input
               type="text"
               name="telefono_propietario"
               placeholder="Teléfono propietario"
               value={formData.telefono_propietario}
               readOnly
-              className="w-60 h-10 px-4 text-sm bg-gray-300 border border-gray-200 rounded text-gray-600 text-left cursor-not-allowed"
+              className="w-full px-3 py-2 bg-gray-700/50 border border-gray-600/50 rounded-md text-gray-400 text-sm cursor-not-allowed"
             />
           </div>
 
-          <br />
-          <div className="flex justify-center">
-            <button type="submit" className="btn-update">
+          {/* Botones */}
+          <div className="flex items-center justify-end space-x-3 pt-4 border-t border-gray-700">
+            <button
+              type="button"
+              onClick={() => navigate("/vehiculos")}
+              className="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-gray-200 text-sm font-semibold rounded-md transition-colors"
+            >
+              Volver
+            </button>
+
+            <button
+              type="submit"
+              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-md transition-colors"
+            >
               {id ? "Actualizar" : "Crear"}
             </button>
           </div>
