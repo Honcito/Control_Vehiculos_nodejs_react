@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import toast, { Toaster } from "react-hot-toast";
-import api from "../api/api"; // Instancia de Axios centralizada con VITE_API_URL
+import api from "../lib/axios"; // Instancia de Axios centralizada con VITE_API_URL
 import "../btnControles.css";
 
 // Obtiene la base URL del entorno
