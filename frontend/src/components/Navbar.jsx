@@ -14,9 +14,9 @@ const Navbar = () => {
   return (
     <nav className="navbar">
       <div className="navbar-container">
-        <Link to="/home" className="navbar-logo">
+        {/* <Link to="/home" className="navbar-logo">
           <img src={logo} alt="Logo Grasalva" />
-        </Link>
+        </Link> */}
 
         {/* Unificación de todo el menú en una sola lista flex */}
         <ul className={`navbar-menu ${menuActive ? "active" : ""}`}>

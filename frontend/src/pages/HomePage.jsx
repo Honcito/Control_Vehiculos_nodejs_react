@@ -25,7 +25,7 @@ const HomePage = () => {
         
         {/* Header con saludo */}
         <div className="text-center space-y-3">
-          <h1 className="text-4xl md:text-5xl font-extrabold text-emerald-400 tracking-tight">
+          <h1 className="text-2xl md:text-3xl font-extrabold text-emerald-400 tracking-tight">
             Hola {user ? user.nombre : "USUARIO"}
           </h1>
           <p className="text-base md:text-lg text-base-content/70 max-w-2xl mx-auto">
