@@ -36,14 +36,13 @@ const Register = () => {
       toast.success("Registro exitoso. Redirigiendo a inicio de sesión...");
       setTimeout(() => navigate("/login"), 1500);
     } catch (err) {
-      console.error("Error en registro:", err);
-      toast.error(
-        err.response?.data?.message || "Error al registrar el usuario"
-      );
-    } font-semibold
-      setLoading(false);
-    }
-  };
+  console.error("Error en registro:", err);
+  toast.error(
+    err.response?.data?.message || "Error al registrar el usuario"
+  );
+} font-semibold // <--- ESTO PROVOCA EL ERROR DE SINTAXIS
+  setLoading(false);
+}
 
   return (
     <div className="min-h-screen w-full flex items-center justify-center bg-base-100 px-4 py-8 text-base-content">
