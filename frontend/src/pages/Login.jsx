@@ -55,7 +55,7 @@ const Login = () => {
               value={nombre}
               onChange={(e) => setNombre(e.target.value)}
               required
-              placeholder="Tu usuario"
+              placeholder="Introduce la palabra: USUARIO"
               className="w-full bg-white border border-gray-300 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all shadow-sm"
               style={{ height: "48px", paddingLeft: "16px", paddingRight: "16px", fontSize: "15px" }}
             />
@@ -71,7 +71,7 @@ const Login = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              placeholder="••••••••"
+              placeholder="Introduce contraseña: USUARIO"
               className="w-full bg-white border border-gray-300 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all shadow-sm"
               style={{ height: "48px", paddingLeft: "16px", paddingRight: "16px", fontSize: "15px" }}
             />
