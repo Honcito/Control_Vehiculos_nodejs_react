@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import toast from "react-hot-toast";
-import api from "../api/api"; // Instancia de Axios centralizada
+import api from "../lib/axios"; // Instancia de Axios centralizada
 
 const FormularioPropietario = () => {
   const navigate = useNavigate();
