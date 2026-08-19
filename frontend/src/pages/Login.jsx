@@ -29,22 +29,24 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-base-100 px-4 py-12 text-base-content">
-      <section className="w-full max-w-md bg-base-200 rounded-2xl shadow-2xl p-8 md:p-10 border border-base-300 space-y-8">
-        
+    <div className="min-h-screen w-full flex items-center justify-center bg-base-100 px-4 py-12">
+      <section 
+        className="w-full max-w-md bg-base-200 rounded-2xl shadow-2xl border border-base-300"
+        style={{ padding: "40px 32px", minHeight: "520px" }}
+      >
         {/* Encabezado */}
-        <div className="text-center space-y-3">
-          <h2 className="text-3xl md:text-4xl font-extrabold text-base-content tracking-tight">
+        <div className="text-center" style={{ marginBottom: "32px" }}>
+          <h2 className="text-3xl font-extrabold text-base-content" style={{ marginBottom: "8px" }}>
             Control de Vehículos
           </h2>
-          <p className="text-sm md:text-base text-base-content/70">
+          <p className="text-sm text-base-content/70">
             Ingresa tus credenciales para acceder
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
           {/* Campo Usuario */}
-          <div className="flex flex-col text-left space-y-2">
+          <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
             <label className="text-sm font-semibold text-base-content">
               Nombre de usuario:
             </label>
@@ -54,12 +56,13 @@ const Login = () => {
               onChange={(e) => setNombre(e.target.value)}
               required
               placeholder="Tu usuario"
-              className="w-full h-12 px-4 text-base bg-white border border-gray-300 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all shadow-sm"
+              className="w-full bg-white border border-gray-300 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all shadow-sm"
+              style={{ height: "48px", paddingLeft: "16px", paddingRight: "16px", fontSize: "15px" }}
             />
           </div>
 
           {/* Campo Contraseña */}
-          <div className="flex flex-col text-left space-y-2">
+          <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
             <label className="text-sm font-semibold text-base-content">
               Contraseña:
             </label>
@@ -69,23 +72,25 @@ const Login = () => {
               onChange={(e) => setPassword(e.target.value)}
               required
               placeholder="••••••••"
-              className="w-full h-12 px-4 text-base bg-white border border-gray-300 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all shadow-sm"
+              className="w-full bg-white border border-gray-300 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all shadow-sm"
+              style={{ height: "48px", paddingLeft: "16px", paddingRight: "16px", fontSize: "15px" }}
             />
           </div>
 
-          {/* Botón Login - Perfectamente Alineado */}
-          <div className="pt-2">
+          {/* Botón Login */}
+          <div style={{ marginTop: "8px" }}>
             <button
               type="submit"
               disabled={loading}
-              className="w-full h-12 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold text-base rounded-xl transition-all shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+              className="w-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold text-base rounded-xl transition-all shadow-md disabled:opacity-50 cursor-pointer"
+              style={{ height: "48px", display: "flex", alignItems: "center", justifyContent: "center" }}
             >
               {loading ? "Iniciando sesión..." : "Iniciar sesión"}
             </button>
           </div>
 
           {/* Enlace a Registro */}
-          <div className="text-center pt-2">
+          <div className="text-center" style={{ marginTop: "8px" }}>
             <Link
               to="/register"
               className="text-sm text-emerald-500 hover:text-emerald-400 hover:underline transition-colors font-medium"

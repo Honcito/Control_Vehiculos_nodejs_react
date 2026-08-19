@@ -44,22 +44,24 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-base-100 px-4 py-12 text-base-content">
-      <section className="w-full max-w-md bg-base-200 rounded-2xl shadow-2xl p-8 md:p-10 border border-base-300 space-y-8">
-        
+    <div className="min-h-screen w-full flex items-center justify-center bg-base-100 px-4 py-12">
+      <section 
+        className="w-full max-w-md bg-base-200 rounded-2xl shadow-2xl border border-base-300"
+        style={{ padding: "40px 32px", minHeight: "580px" }}
+      >
         {/* Encabezado */}
-        <div className="text-center space-y-3">
-          <h2 className="text-3xl md:text-4xl font-extrabold text-base-content tracking-tight">
+        <div className="text-center" style={{ marginBottom: "32px" }}>
+          <h2 className="text-3xl font-extrabold text-base-content" style={{ marginBottom: "8px" }}>
             Registro de Empleados
           </h2>
-          <p className="text-sm md:text-base text-base-content/70">
+          <p className="text-sm text-base-content/70">
             Crea una cuenta para acceder al sistema
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
           {/* Campo Nombre */}
-          <div className="flex flex-col text-left space-y-2">
+          <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
             <label className="text-sm font-semibold text-base-content">
               Nombre de usuario <span className="text-red-500">*</span>
             </label>
@@ -70,12 +72,13 @@ const Register = () => {
               onChange={handleChange}
               required
               placeholder="Ej: juanperez"
-              className="w-full h-12 px-4 text-base bg-white border border-gray-300 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all shadow-sm"
+              className="w-full bg-white border border-gray-300 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all shadow-sm"
+              style={{ height: "48px", paddingLeft: "16px", paddingRight: "16px", fontSize: "15px" }}
             />
           </div>
 
           {/* Campo Contraseña */}
-          <div className="flex flex-col text-left space-y-2">
+          <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
             <label className="text-sm font-semibold text-base-content">
               Contraseña <span className="text-red-500">*</span>
             </label>
@@ -86,12 +89,13 @@ const Register = () => {
               onChange={handleChange}
               required
               placeholder="••••••••"
-              className="w-full h-12 px-4 text-base bg-white border border-gray-300 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all shadow-sm"
+              className="w-full bg-white border border-gray-300 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all shadow-sm"
+              style={{ height: "48px", paddingLeft: "16px", paddingRight: "16px", fontSize: "15px" }}
             />
           </div>
 
           {/* Campo Teléfono */}
-          <div className="flex flex-col text-left space-y-2">
+          <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
             <label className="text-sm font-semibold text-base-content">
               Teléfono <span className="text-base-content/50 text-xs font-normal">(Opcional)</span>
             </label>
@@ -101,23 +105,25 @@ const Register = () => {
               value={formData.telefono}
               onChange={handleChange}
               placeholder="Ej: 600123456"
-              className="w-full h-12 px-4 text-base bg-white border border-gray-300 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all shadow-sm"
+              className="w-full bg-white border border-gray-300 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all shadow-sm"
+              style={{ height: "48px", paddingLeft: "16px", paddingRight: "16px", fontSize: "15px" }}
             />
           </div>
 
           {/* Botón Registro */}
-          <div className="pt-2">
+          <div style={{ marginTop: "8px" }}>
             <button
               type="submit"
               disabled={loading}
-              className="w-full h-12 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold text-base rounded-xl transition-all shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+              className="w-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold text-base rounded-xl transition-all shadow-md disabled:opacity-50 cursor-pointer"
+              style={{ height: "48px", display: "flex", alignItems: "center", justifyContent: "center" }}
             >
               {loading ? "Registrando..." : "Registrarse"}
             </button>
           </div>
 
           {/* Enlace a Login */}
-          <div className="text-center pt-2">
+          <div className="text-center" style={{ marginTop: "8px" }}>
             <Link
               to="/login"
               className="text-sm text-emerald-500 hover:text-emerald-400 hover:underline transition-colors font-medium"
