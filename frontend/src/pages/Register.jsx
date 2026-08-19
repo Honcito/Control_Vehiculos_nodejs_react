@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import toast from "react-hot-toast";
 import api from "../lib/axios"; // Instancia centralizada de Axios
 import "../btn.css";
@@ -46,21 +46,23 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-dvh w-full flex items-center justify-center bg-gray-800 px-6 py-12">
-      <section className="w-full max-w-md min-h-[550px] flex flex-col justify-center bg-gray-900 rounded-lg shadow-xl p-10 space-y-6 border border-gray-700">
+    <div className="min-h-screen w-full flex items-center justify-center bg-gray-800 px-4 py-8">
+      <section className="w-full max-w-md bg-gray-900 rounded-lg shadow-xl p-8 border border-gray-700 space-y-6">
+        
+        {/* Encabezado */}
         <div className="text-center space-y-2">
           <h2 className="text-3xl font-bold text-white">
             Registro de Empleados
           </h2>
-          <p className="text-base text-gray-400">
+          <p className="text-sm text-gray-400">
             Crea una cuenta para acceder al sistema
           </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-5">
           {/* Campo Nombre */}
-          <div className="flex flex-col items-center">
-            <label className="w-72 text-base font-medium text-white mb-2 text-left">
+          <div className="flex flex-col text-left space-y-1.5">
+            <label className="text-sm font-medium text-white">
               Nombre de usuario <span className="text-red-500">*</span>
             </label>
             <input
@@ -70,13 +72,13 @@ const Register = () => {
               onChange={handleChange}
               required
               placeholder="Ej: juanperez"
-              className="w-72 h-11 px-4 text-base bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 border border-gray-300 rounded text-gray-800"
+              className="w-full h-11 px-4 text-base bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 border border-gray-300 rounded text-gray-800"
             />
           </div>
 
           {/* Campo Contraseña */}
-          <div className="flex flex-col items-center">
-            <label className="w-72 text-base font-medium text-white mb-2 text-left">
+          <div className="flex flex-col text-left space-y-1.5">
+            <label className="text-sm font-medium text-white">
               Contraseña <span className="text-red-500">*</span>
             </label>
             <input
@@ -86,13 +88,13 @@ const Register = () => {
               onChange={handleChange}
               required
               placeholder="••••••••"
-              className="w-72 h-11 px-4 text-base bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 border border-gray-300 rounded text-gray-800"
+              className="w-full h-11 px-4 text-base bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 border border-gray-300 rounded text-gray-800"
             />
           </div>
 
           {/* Campo Teléfono */}
-          <div className="flex flex-col items-center">
-            <label className="w-72 text-base font-medium text-white mb-2 text-left">
+          <div className="flex flex-col text-left space-y-1.5">
+            <label className="text-sm font-medium text-white">
               Teléfono <span className="text-gray-400 text-xs">(Opcional)</span>
             </label>
             <input
@@ -101,30 +103,29 @@ const Register = () => {
               value={formData.telefono}
               onChange={handleChange}
               placeholder="Ej: 600123456"
-              className="w-72 h-11 px-4 text-base bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 border border-gray-300 rounded text-gray-800"
+              className="w-full h-11 px-4 text-base bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 border border-gray-300 rounded text-gray-800"
             />
           </div>
 
           {/* Botón Registro */}
-          <div className="flex justify-center pt-2">
+          <div className="pt-2">
             <button
               type="submit"
               disabled={loading}
-              className="btn-login w-72 h-11 disabled:opacity-50 disabled:cursor-not-allowed text-base font-semibold"
+              className="btn-login w-full h-11 disabled:opacity-50 disabled:cursor-not-allowed text-base font-semibold"
             >
               {loading ? "Registrando..." : "Registrarse"}
             </button>
           </div>
 
           {/* Enlace a Login */}
-          <div className="flex items-center justify-center pt-2">
-            <button
-              type="button"
-              onClick={() => navigate("/login")}
-              className="text-sm text-blue-400 hover:text-blue-300 hover:underline transition-colors bg-transparent border-0 cursor-pointer"
+          <div className="text-center pt-2">
+            <Link
+              to="/login"
+              className="text-sm text-blue-400 hover:text-blue-300 hover:underline transition-colors"
             >
               ¿Ya tienes cuenta? Inicia sesión aquí
-            </button>
+            </Link>
           </div>
         </form>
       </section>
