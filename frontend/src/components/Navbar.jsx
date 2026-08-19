@@ -10,13 +10,18 @@ const Navbar = () => {
 
   const toggleMenu = () => setMenuActive(!menuActive);
 
+  // Verificación flexible del rol de administrador
+  const isAdmin =
+    user?.role === "ROLE_ADMIN" ||
+    user?.roles?.includes("ROLE_ADMIN") ||
+    user?.authorities?.some((a) => a.authority === "ROLE_ADMIN");
+
   return (
     <nav className="navbar w-full bg-base-200/80 backdrop-blur-md border-b border-base-300 sticky top-0 z-50">
       <div 
         className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-center relative"
         style={{ width: "100%", margin: "0 auto" }}
       >
-        {/* Lista del menú centrada con estilos unificados */}
         <ul 
           className={`navbar-menu ${menuActive ? "active" : ""} flex items-center justify-center gap-6 md:gap-8 w-full`}
           style={{ margin: "0 auto", padding: "0", listStyle: "none" }}
@@ -34,7 +39,8 @@ const Navbar = () => {
             </NavLink>
           </li>
 
-          {user?.role === "ROLE_ADMIN" && (
+          {/* Menú exclusivo para Administradores */}
+          {isAdmin && (
             <>
               <li>
                 <NavLink 
@@ -103,7 +109,7 @@ const Navbar = () => {
           </li>
         </ul>
 
-        {/* Botón hamburguesa para dispositivos móviles */}
+        {/* Botón hamburguesa móvil */}
         <button
           className={`navbar-toggle ${
             menuActive ? "active" : ""
