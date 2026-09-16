@@ -27,8 +27,13 @@ router.get("/me", authMiddleware, (req, res) => {
     return res.status(401).json({ message: "No autenticado" });
   }
 
+  // 🟢 OBLIGAR AL NAVEGADOR Y PROXIES A NO GUARDAR EN CACHÉ ESTA RESPUESTA
+  res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate");
+  res.setHeader("Pragma", "no-cache");
+  res.setHeader("Expires", "0");
+
   const { id_usuario, nombre, role } = req.session.user;
-  res.json({ id: id_usuario, username: nombre, role }); // o usa los nombres que prefieras
+  res.json({ id: id_usuario, username: nombre, role });
 });
 
 
