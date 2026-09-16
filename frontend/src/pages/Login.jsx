@@ -3,26 +3,23 @@ import { useNavigate, Link } from "react-router-dom";
 import toast from "react-hot-toast";
 import api from "../lib/axios";
 
-const Login = () => {
-  const [nombre, setNombre] = useState("");
-  const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
-
-  const handleSubmit = async (e) => {
+const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      const response = await api.post("/api/auth/login", { nombre, password });
-      toast.success("¡Bienvenido!");
-      localStorage.setItem("user", JSON.stringify(response.data.user));
-      navigate("/home");
+      // Usamos el login del contexto en lugar de api.post directo
+      const result = await login({ nombre, password });
+
+      if (result.success) {
+        toast.success("¡Bienvenido!");
+        navigate("/home");
+      } else {
+        toast.error(result.message || "Credenciales incorrectas");
+      }
     } catch (err) {
       console.error("Error en login:", err);
-      toast.error(
-        err.response?.data?.message || "Credenciales incorrectas o error en el servidor"
-      );
+      toast.error("Error al conectar con el servidor");
     } finally {
       setLoading(false);
     }

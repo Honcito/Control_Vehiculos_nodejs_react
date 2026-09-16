@@ -46,15 +46,9 @@ export const AuthProvider = ({ children }) => {
     } catch (err) {
       console.error("Error al cerrar sesión", err);
     } finally {
+      localStorage.removeItem("user");
       setUser(null);
     }
   };
 
-  return (
-    <AuthContext.Provider value={{ user, login, logout }}>
-      {children}
-    </AuthContext.Provider>
-  );
-};
-
-export const useAuth = () => useContext(AuthContext);
+  export const useAuth = () => useContext(AuthContext);
