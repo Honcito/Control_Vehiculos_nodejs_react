@@ -51,4 +51,12 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  export const useAuth = () => useContext(AuthContext);
+  return (
+    <AuthContext.Provider value={{ user, login, logout }}>
+      {children}
+    </AuthContext.Provider>
+  );
+}; // 👈 AQUÍ FALTABA CERRAR LA FUNCIÓN AuthProvider
+
+// Hook personalizado declarado fuera de la función
+export const useAuth = () => useContext(AuthContext);
