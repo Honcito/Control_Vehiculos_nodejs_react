@@ -14,11 +14,17 @@ export const login = (req, res) => {
         const match = await bcrypt.compare(password, user.password);
         if(!match) return res.status(401).json({ error: "Contraseña incorrecta" });
 
-        req.session.user = { id_usuario: user.id_usuario, nombre: user.nombre, role: user.rol};
-        res.status(200).json({ message: "Login correcto", user: req.session.user });
-    });
+        // 🟢 REGENERAR LA SESIÓN PARA EVITAR MANTENER EL ID ANTERIOR
+        req.session.regenerate((err) => {
+            if (err) return res.status(500).json({ error: "Error al iniciar sesión" });
 
-   
+            req.session.user = { id_usuario: user.id_usuario, nombre: user.nombre, role: user.rol };
+            
+            // Asegurar que la respuesta tampoco se guarde en caché
+            res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate");
+            res.status(200).json({ message: "Login correcto", user: req.session.user });
+        });
+    });
 }
 
 export const logout = (req, res) => {
