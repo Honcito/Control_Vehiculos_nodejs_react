@@ -1,14 +1,24 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import toast from "react-hot-toast";
-import api from "../lib/axios";
+import { useAuth } from "../context/AuthContext";
 
-const handleSubmit = async (e) => {
+const Login = () => {
+  // 1. Hook de autenticación y navegación
+  const { login } = useAuth();
+  const navigate = useNavigate();
+
+  // 2. Estados locales del formulario
+  const [nombre, setNombre] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  // 3. Manejador del envío
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      // Usamos el login del contexto en lugar de api.post directo
       const result = await login({ nombre, password });
 
       if (result.success) {
